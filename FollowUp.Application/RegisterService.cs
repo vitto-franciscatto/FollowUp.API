@@ -2,6 +2,8 @@
 using FollowUp.Application.Commands.CreateFollowUp;
 using FollowUp.Application.Commands.CreateTag;
 using FollowUp.Application.DTOs;
+using FollowUp.Application.Interfaces;
+using FollowUp.Application.Services;
 using FollowUp.Application.Validators;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +21,9 @@ namespace FollowUp.Application
             services.AddScoped<IValidator<ContactDTO>, ContactDTOValidator>();
             services.AddScoped<IValidator<CreateFollowUpCommand>, CreateFollowUpCommandValidator>();
             services.AddScoped<IValidator<CreateTagCommand>, CreateTagCommandValidator>();
+
+            services.AddDistributedMemoryCache();
+            services.AddSingleton<ICacheService, CacheService>();
         }
     }
 }

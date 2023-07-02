@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FollowUp.Application.Queries
 {
-    public class GetAllTagsQuery : IRequest<Result<IEnumerable<TagDTO>>>
+    public class GetAllTagsQuery : IRequest<Result<IEnumerable<TagDTO>?>>
     {
     }
 }
