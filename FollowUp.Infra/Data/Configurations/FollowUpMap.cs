@@ -3,9 +3,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FollowUp.Infra.Data.Configurations
 {
-    public class FollowUpMap : IEntityTypeConfiguration<FollowUpDAL>
+    public class FollowUpMap 
+        : IEntityTypeConfiguration<FollowUpDAL>
     {
-        public void Configure(EntityTypeBuilder<FollowUpDAL> builder)
+        public void Configure(
+            EntityTypeBuilder<FollowUpDAL> builder)
         {
             builder.ToTable("FollowUps", "followUp");
 

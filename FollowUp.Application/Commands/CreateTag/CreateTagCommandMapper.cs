@@ -9,9 +9,12 @@ namespace FollowUp.Application.Commands.CreateTag
 {
     internal static class CreateTagCommandMapper
     {
-        internal static Tag MapToTag(this CreateTagCommand command)
+        internal static Tag MapToTag(
+            this CreateTagCommand command)
         {
-            return Tag.Create(0, command.Name);
+            return Tag.Create(
+                0, 
+                command.Name);
         }
     }
 }

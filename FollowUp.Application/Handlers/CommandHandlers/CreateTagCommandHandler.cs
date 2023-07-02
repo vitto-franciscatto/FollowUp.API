@@ -9,7 +9,8 @@ using MediatR;
 
 namespace FollowUp.Application.Handlers.CommandHandlers
 {
-    public class CreateTagCommandHandler : IRequestHandler<CreateTagCommand, Result<TagDTO>>
+    public class CreateTagCommandHandler 
+        : IRequestHandler<CreateTagCommand, Result<TagDTO>>
     {
         private readonly ITagRepository _tagRepository;
         private readonly IValidator<CreateTagCommand> _validator;
@@ -25,17 +26,27 @@ namespace FollowUp.Application.Handlers.CommandHandlers
             _publisher = publisher;
         }
 
-        public async Task<Result<TagDTO>> Handle(CreateTagCommand command, CancellationToken cancellationToken)
+        public async Task<Result<TagDTO>> Handle(
+            CreateTagCommand command, 
+            CancellationToken cancellationToken)
         {
             var validationResult = _validator.Validate(command);
             if (!validationResult.IsValid)
             {
-                return new Result<TagDTO>(new ArgumentException(validationResult.Errors.First().ErrorMessage));
+                return new Result<TagDTO>(
+                    new ArgumentException(
+                        validationResult.Errors.First().ErrorMessage));
             }
 
-            Tag newTag = await _tagRepository.CreateAsync(command.MapToTag());
+            Tag newTag = 
+                await _tagRepository.CreateAsync(command.MapToTag());
 
-            await _publisher.Publish(new TagAddNotification() { Tag = newTag }, cancellationToken);
+            await _publisher.Publish(
+                new TagAddNotification() 
+                { 
+                    Tag = newTag 
+                }, 
+                cancellationToken);
 
             return new Result<TagDTO>(newTag.MapToTagDTO());
         }

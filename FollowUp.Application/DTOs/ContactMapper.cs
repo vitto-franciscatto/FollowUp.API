@@ -9,7 +9,8 @@ namespace FollowUp.Application.DTOs
 {
     internal static class ContactMapper
     {
-        internal static Contact? MapToContact (this ContactDTO? dto)
+        internal static Contact? MapToContact (
+            this ContactDTO? dto)
         {
             if (dto is null)
             {
@@ -22,14 +23,20 @@ namespace FollowUp.Application.DTOs
                 dto.Job);
         }
 
-        internal static ContactDTO? MapToContact(this Contact? entity)
+        internal static ContactDTO? MapToContact(
+            this Contact? entity)
         {
             if (entity is null)
             {
                 return null;
             }
 
-            return new ContactDTO() { Name = entity.Name, PhoneNumber = entity.PhoneNumber, Job = entity.Job };
+            return new ContactDTO() 
+            { 
+                Name = entity.Name, 
+                PhoneNumber = entity.PhoneNumber, 
+                Job = entity.Job 
+            };
         }
     }
 }

@@ -6,7 +6,8 @@ using FollowUp.Domain;
 
 namespace FollowUp.Application.Validators
 {
-    internal class CreateFollowUpCommandValidator : AbstractValidator<CreateFollowUpCommand>
+    internal class CreateFollowUpCommandValidator 
+        : AbstractValidator<CreateFollowUpCommand>
     {
         private readonly ITagRepository _tagRepository;
         public CreateFollowUpCommandValidator(ITagRepository tagRepository)
@@ -36,8 +37,10 @@ namespace FollowUp.Application.Validators
                 .Cascade(CascadeMode.Stop)
                 .NotNull().WithMessage("A Mensagem não pode ser nula")
                 .NotEmpty().WithMessage("A mensagem não pode ser vazia")
-                .Must(message => message.Length >= 1).WithMessage("A mensagem deve ter no mínimo 1 caracter")
-                .Must(message => message.Length <= 8000).WithMessage("A mensagem deve ter no máximo 8000 caracteres");
+                .Must(message => message.Length >= 1)
+                    .WithMessage("A mensagem deve ter no mínimo 1 caracter")
+                .Must(message => message.Length <= 8000)
+                    .WithMessage("A mensagem deve ter no máximo 8000 caracteres");
 
             //RuleFor(_ => _.CreatedAt)
             //    .Cascade(CascadeMode.Stop);

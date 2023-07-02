@@ -12,15 +12,20 @@ namespace FollowUp.Infra.Data.Context
 {
     public class FollowUpDbContext : DbContext
     {
-        public FollowUpDbContext(DbContextOptions<FollowUpDbContext> options) : base(options)
+        public FollowUpDbContext(
+            DbContextOptions<FollowUpDbContext> options) 
+            : base(options)
         {
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration<FollowUpDAL>(new FollowUpMap());
-            modelBuilder.ApplyConfiguration<TagDAL>(new TagMap());
-            modelBuilder.ApplyConfiguration<FollowUpTag>(new FollowUpTagMap());
+            modelBuilder
+                .ApplyConfiguration<FollowUpDAL>(new FollowUpMap());
+            modelBuilder
+                .ApplyConfiguration<TagDAL>(new TagMap());
+            modelBuilder
+                .ApplyConfiguration<FollowUpTag>(new FollowUpTagMap());
 
             base.OnModelCreating(modelBuilder);
         }

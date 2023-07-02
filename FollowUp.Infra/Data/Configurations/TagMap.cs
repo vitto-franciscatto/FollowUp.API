@@ -10,9 +10,11 @@ using System.Threading.Tasks;
 
 namespace FollowUp.Infra.Data.Configurations
 {
-    internal class TagMap : IEntityTypeConfiguration<TagDAL>
+    internal class TagMap 
+        : IEntityTypeConfiguration<TagDAL>
     {
-        public void Configure(EntityTypeBuilder<TagDAL> builder)
+        public void Configure(
+            EntityTypeBuilder<TagDAL> builder)
         {
             builder.ToTable("Tags", "tag");
 

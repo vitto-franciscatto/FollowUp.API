@@ -38,7 +38,41 @@ namespace FollowUp.Application.Services
             return value;
         }
 
-        public async Task<T?> GetAsync<T>(string key, Func<Task<T>> factory, CancellationToken cancellationToken = default) where T : class
+        public async Task SetAsync<T>(
+            string key,
+            T value,
+            CancellationToken cancellationToken = default) where T : class
+        {
+            string serializedValue = JsonConvert.SerializeObject(value);
+
+            await _distributedCache.SetStringAsync(
+                key,
+                serializedValue,
+                new DistributedCacheEntryOptions()
+                {
+                    SlidingExpiration = TimeSpan.FromMinutes(15),
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1)
+                },
+                cancellationToken);
+
+            _cacheKeys.TryAdd(key, false);
+        }
+
+        public async Task RemoveAsync(
+            string key,
+            CancellationToken cancellationToken = default)
+        {
+            await _distributedCache.RemoveAsync(
+                key, 
+                cancellationToken);
+
+            _cacheKeys.TryRemove(key, out _);
+        }
+
+        public async Task<T?> GetAsync<T>(
+            string key, 
+            Func<Task<T>> factory, 
+            CancellationToken cancellationToken = default) where T : class
         {
             T? cachedValue = await this.GetAsync<T>(
                 key,
@@ -51,18 +85,12 @@ namespace FollowUp.Application.Services
 
             cachedValue = await factory();
 
-            await this.SetAsync<T>(key, cachedValue, cancellationToken);
+            await this.SetAsync<T>(
+                key, 
+                cachedValue, 
+                cancellationToken);
 
             return cachedValue;
-        }
-
-        public async Task RemoveAsync(
-            string key, 
-            CancellationToken cancellationToken = default)
-        {
-             await _distributedCache.RemoveAsync(key, cancellationToken);
-
-            _cacheKeys.TryRemove(key, out _);
         }
 
         public async Task RemoveByPrefixAsync(
@@ -72,29 +100,11 @@ namespace FollowUp.Application.Services
             IEnumerable<Task> tasks = _cacheKeys
                 .Keys
                 .Where(key => key.StartsWith(prefixKey))
-                .Select(key => this.RemoveAsync(key, cancellationToken));
+                .Select(key => this.RemoveAsync(
+                    key, 
+                    cancellationToken));
 
             await Task.WhenAll(tasks);
-        }
-
-        public async Task SetAsync<T>(
-            string key, 
-            T value, 
-            CancellationToken cancellationToken = default) where T : class
-        {
-            string serializedValue = JsonConvert.SerializeObject(value);
-
-            await _distributedCache.SetStringAsync(
-                key, 
-                serializedValue, 
-                new DistributedCacheEntryOptions() 
-                { 
-                    SlidingExpiration = TimeSpan.FromMinutes(15), 
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1) 
-                }, 
-                cancellationToken);
-
-            _cacheKeys.TryAdd(key, false);
         }
     }
 }

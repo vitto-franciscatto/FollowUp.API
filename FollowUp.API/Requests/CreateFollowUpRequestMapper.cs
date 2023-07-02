@@ -4,7 +4,9 @@ namespace FollowUp.API.Requests
 {
     internal static class CreateFollowUpRequestMapper
     {
-        internal static CreateFollowUpCommand MapToCommand(this CreateFollowUpRequest request, DateTime dateTime)
+        internal static CreateFollowUpCommand MapToCommand(
+            this CreateFollowUpRequest request, 
+            DateTime dateTime)
         {
             return new CreateFollowUpCommand()
             {

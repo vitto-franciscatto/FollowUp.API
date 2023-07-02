@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 
 namespace FollowUp.Application.Handlers.NotificationHandler
 {
-    internal class FollowUpAddedNotificationHandler : INotificationHandler<FollowUpAddedNotification>
+    internal class FollowUpAddedNotificationHandler 
+        : INotificationHandler<FollowUpAddedNotification>
     {
         private readonly ICacheService _cacheService;
         public FollowUpAddedNotificationHandler(
@@ -19,9 +20,13 @@ namespace FollowUp.Application.Handlers.NotificationHandler
             _cacheService = cacheService;
         }
 
-        public async Task Handle(FollowUpAddedNotification notification, CancellationToken cancellationToken)
+        public async Task Handle(
+            FollowUpAddedNotification notification, 
+            CancellationToken cancellationToken)
         {
-            await _cacheService.RemoveAsync($"followUpsAPI_followUps_assistance_{notification.FollowUp.AssistanceId}", cancellationToken);
+            await _cacheService.RemoveAsync(
+                $"followUpsAPI_followUps_assistance_{notification.FollowUp.AssistanceId}", 
+                cancellationToken);
         }
     }
 }

@@ -4,7 +4,7 @@ using FollowUp.API.Requests;
 using LanguageExt.Common;
 using FollowUp.Application.DTOs;
 using MediatR;
-using FollowUp.Application.Queries.GetFollowUpByAssistance;
+using FollowUp.Application.Queries;
 
 namespace FollowUps.API.Controllers
 {
@@ -19,9 +19,16 @@ namespace FollowUps.API.Controllers
         }
 
         [HttpGet("[controller]/[action]/{assistanceId}")]
-        public async Task<IActionResult> GetByAssistance(int assistanceId, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetByAssistance(
+            int assistanceId, 
+            CancellationToken cancellationToken)
         {
-            Result<IEnumerable<FollowUpDTO>> response = await _mediator.Send(new GetFollowUpsByAssistanceQuery() { AssistanceId = assistanceId }, cancellationToken);
+            Result<IEnumerable<FollowUpDTO>> response = await _mediator.Send(
+                new GetFollowUpsByAssistanceQuery() 
+                { 
+                    AssistanceId = assistanceId 
+                }, 
+                cancellationToken);
 
             return response.Match<IActionResult>(
                 dto =>
@@ -31,20 +38,33 @@ namespace FollowUps.API.Controllers
                         return StatusCode((int)HttpStatusCode.NoContent);
                     }
 
-                    return StatusCode((int)HttpStatusCode.Created, dto);
+                    return StatusCode(
+                        (int)HttpStatusCode.Created, 
+                        dto);
                 },
 
-                error => StatusCode((int)HttpStatusCode.UnprocessableEntity, error.Message));
+                error => StatusCode(
+                    (int)HttpStatusCode.UnprocessableEntity, 
+                    error.Message));
         }
 
         [HttpPost("[controller]")]
-        public async Task<IActionResult> Create([FromBody] CreateFollowUpRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create(
+            [FromBody] CreateFollowUpRequest request, 
+            CancellationToken cancellationToken)
         {
-            Result<FollowUpDTO> response = await _mediator.Send(request.MapToCommand(DateTime.Now), cancellationToken);
+            Result<FollowUpDTO> response = await _mediator.Send
+                
+                (request.MapToCommand(DateTime.Now), 
+                cancellationToken);
 
             return response.Match<IActionResult>(
-                dto => StatusCode((int)HttpStatusCode.Created, dto), 
-                error => StatusCode((int)HttpStatusCode.UnprocessableEntity, error.Message));
+                dto => StatusCode(
+                    (int)HttpStatusCode.Created, 
+                    dto), 
+                error => StatusCode(
+                    (int)HttpStatusCode.UnprocessableEntity, 
+                    error.Message));
         }
     }
 }

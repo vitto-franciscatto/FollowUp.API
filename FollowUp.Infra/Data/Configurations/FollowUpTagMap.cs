@@ -9,9 +9,11 @@ using System.Threading.Tasks;
 
 namespace FollowUp.Infra.Data.Configurations
 {
-    internal class FollowUpTagMap : IEntityTypeConfiguration<FollowUpTag>
+    internal class FollowUpTagMap 
+        : IEntityTypeConfiguration<FollowUpTag>
     {
-        public void Configure(EntityTypeBuilder<FollowUpTag> builder)
+        public void Configure(
+            EntityTypeBuilder<FollowUpTag> builder)
         {
             builder.ToTable("FollowUpTag", "followUp");
 

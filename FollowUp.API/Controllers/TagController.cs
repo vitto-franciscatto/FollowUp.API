@@ -22,7 +22,9 @@ namespace FollowUp.API.Controllers
         [Route("[controller]")]
         public async Task<IActionResult> Get(CancellationToken cancellationToken)
         {
-            Result<IEnumerable<TagDTO>?> response = await _mediator.Send(new GetAllTagsQuery(), cancellationToken);
+            Result<IEnumerable<TagDTO>?> response = await _mediator.Send(
+                new GetAllTagsQuery(), 
+                cancellationToken);
 
             return response.Match<IActionResult>(
                 dtos => 
@@ -32,20 +34,32 @@ namespace FollowUp.API.Controllers
                         return StatusCode((int)HttpStatusCode.NoContent);
                     }
 
-                    return StatusCode((int)HttpStatusCode.Created, dtos);
+                    return StatusCode(
+                        (int)HttpStatusCode.Created, 
+                        dtos);
                 },
-                error => StatusCode((int)HttpStatusCode.UnprocessableEntity, error.Message));
+                error => StatusCode(
+                    (int)HttpStatusCode.UnprocessableEntity, 
+                    error.Message));
         }
 
         [HttpPost]
         [Route("[controller]")]
-        public async Task<IActionResult> Create([FromBody] CreateTagRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create(
+            [FromBody] CreateTagRequest request, 
+            CancellationToken cancellationToken)
         {
-            Result<TagDTO> response = await _mediator.Send(request.MapToCommand(), cancellationToken);
+            Result<TagDTO> response = await _mediator.Send(
+                request.MapToCommand(), 
+                cancellationToken);
 
             return response.Match(
-                dto => StatusCode((int)HttpStatusCode.Created, dto), 
-                error => StatusCode((int)HttpStatusCode.UnprocessableEntity, error.Message));
+                dto => StatusCode(
+                    (int)HttpStatusCode.Created, 
+                    dto), 
+                error => StatusCode(
+                    (int)HttpStatusCode.UnprocessableEntity, 
+                    error.Message));
         }
     }
 }

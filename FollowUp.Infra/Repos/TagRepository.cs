@@ -30,14 +30,18 @@ namespace FollowUp.Infra.Repos
 
         public async Task<IEnumerable<Tag>> Get()
         {
-            List<TagDAL> dals = await _ctx.Set<TagDAL>().ToListAsync();
+            List<TagDAL> dals = await _ctx
+                .Set<TagDAL>()
+                .ToListAsync();
 
             return dals.Select(dal => dal.MapToTag());
         }
 
         public async Task<Tag?> Get(int tagId)
         {
-            TagDAL? dal = await _ctx.Set<TagDAL>().SingleOrDefaultAsync(_ => _.Id == tagId);
+            TagDAL? dal = await _ctx
+                .Set<TagDAL>()
+                .SingleOrDefaultAsync(_ => _.Id == tagId);
 
             return dal is null ? null : dal.MapToTag();
         }
