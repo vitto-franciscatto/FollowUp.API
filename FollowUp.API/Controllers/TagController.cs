@@ -22,12 +22,12 @@ namespace FollowUp.API.Controllers
         [Route("[controller]")]
         public async Task<IActionResult> Get(CancellationToken cancellationToken)
         {
-            Result<IEnumerable<TagDTO>> response = await _mediator.Send(new GetAllTagsQuery(), cancellationToken);
+            Result<IEnumerable<TagDTO>?> response = await _mediator.Send(new GetAllTagsQuery(), cancellationToken);
 
             return response.Match<IActionResult>(
                 dtos => 
                 {
-                    if (!dtos.Any())
+                    if (dtos is null)
                     {
                         return StatusCode((int)HttpStatusCode.NoContent);
                     }

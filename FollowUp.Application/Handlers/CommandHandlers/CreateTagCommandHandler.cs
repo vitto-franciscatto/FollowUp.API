@@ -2,6 +2,7 @@
 using FollowUp.Application.Commands.CreateTag;
 using FollowUp.Application.DTOs;
 using FollowUp.Application.Interfaces;
+using FollowUp.Application.Notifications;
 using FollowUp.Domain;
 using LanguageExt.Common;
 using MediatR;
@@ -12,13 +13,16 @@ namespace FollowUp.Application.Handlers.CommandHandlers
     {
         private readonly ITagRepository _tagRepository;
         private readonly IValidator<CreateTagCommand> _validator;
+        private readonly IPublisher _publisher;
 
         public CreateTagCommandHandler(
-            ITagRepository tagRepository, 
-            IValidator<CreateTagCommand> validator)
+            ITagRepository tagRepository,
+            IValidator<CreateTagCommand> validator,
+            IPublisher publisher)
         {
             _tagRepository = tagRepository;
             _validator = validator;
+            _publisher = publisher;
         }
 
         public async Task<Result<TagDTO>> Handle(CreateTagCommand command, CancellationToken cancellationToken)
@@ -30,6 +34,8 @@ namespace FollowUp.Application.Handlers.CommandHandlers
             }
 
             Tag newTag = await _tagRepository.CreateAsync(command.MapToTag());
+
+            await _publisher.Publish(new TagAddNotification() { Tag = newTag });
 
             return new Result<TagDTO>(newTag.MapToTagDTO());
         }

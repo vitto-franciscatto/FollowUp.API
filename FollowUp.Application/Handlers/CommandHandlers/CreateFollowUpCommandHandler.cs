@@ -2,6 +2,7 @@
 using FollowUp.Application.Commands.CreateFollowUp;
 using FollowUp.Application.DTOs;
 using FollowUp.Application.Interfaces;
+using FollowUp.Application.Notifications;
 using LanguageExt.Common;
 using MediatR;
 
@@ -11,13 +12,16 @@ namespace FollowUp.Application.Handlers.CommandHandlers
     {
         private readonly IFollowUpRepository _repo;
         private readonly IValidator<CreateFollowUpCommand> _validator;
+        private readonly IPublisher _publisher;
 
         public CreateFollowUpCommandHandler(
-            IFollowUpRepository repo, 
-            IValidator<CreateFollowUpCommand> validator)
+            IFollowUpRepository repo,
+            IValidator<CreateFollowUpCommand> validator,
+            IPublisher publisher)
         {
             _repo = repo;
             _validator = validator;
+            _publisher = publisher;
         }
 
         public async Task<Result<FollowUpDTO>> Handle(CreateFollowUpCommand request, CancellationToken cancellationToken)
@@ -31,6 +35,8 @@ namespace FollowUp.Application.Handlers.CommandHandlers
                 }
 
                 Domain.FollowUp newFollowUp =  await _repo.CreateAsync(request.MapToFollowUp());
+
+                await _publisher.Publish(new FollowUpAddedNotification() { FollowUp = newFollowUp });
 
                 return new Result<FollowUpDTO>(newFollowUp.MapToFollowUpDTO());
             }
