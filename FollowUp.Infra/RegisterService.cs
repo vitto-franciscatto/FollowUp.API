@@ -9,10 +9,13 @@ namespace FollowUp.Infra
 {
     public static class RegisterService
     {
-        public static void ConfigureInfra(this IServiceCollection services, IConfiguration configuration)
+        public static void ConfigureInfra(
+            this IServiceCollection services, 
+            IConfiguration configuration)
         {
             services.AddDbContext<FollowUpDbContext>(options => 
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(
+                    configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped<IFollowUpRepository, FollowUpRepository>();
             services.AddScoped<ITagRepository, TagRepository>();

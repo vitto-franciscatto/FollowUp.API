@@ -7,7 +7,9 @@ using MediatR;
 
 namespace FollowUp.Application.Handlers.QueryHandlers
 {
-    public class GetAllTagsQueryHandler : IRequestHandler<GetAllTagsQuery, Result<IEnumerable<TagDTO>?>>
+    public class GetAllTagsQueryHandler 
+        
+        : IRequestHandler<GetAllTagsQuery, Result<IEnumerable<TagDTO>?>>
     {
         private readonly ITagRepository _repository;
         private readonly ICacheService _cacheService;
@@ -20,16 +22,21 @@ namespace FollowUp.Application.Handlers.QueryHandlers
             _cacheService = cacheService;
         }
 
-        public async Task<Result<IEnumerable<TagDTO>?>> Handle(GetAllTagsQuery request, CancellationToken cancellationToken)
+        public async Task<Result<IEnumerable<TagDTO>?>> Handle(
+            GetAllTagsQuery request, 
+            CancellationToken cancellationToken)
         {
-            IEnumerable<TagDTO>? response = await _cacheService.GetAsync<IEnumerable<TagDTO>>(
-                "followUpsAPI_tags", 
-                async () => 
-                {
-                    IEnumerable<Tag>? tags = await _repository.Get();
-                    return tags?.Select(tag => tag.MapToTagDTO());
-                }, 
-                cancellationToken);
+            IEnumerable<TagDTO>? response = 
+                await _cacheService.GetAsync<IEnumerable<TagDTO>>(
+                    "followUpsAPI_tags", 
+                    async () => 
+                    {
+                        IEnumerable<Tag>? tags = 
+                            await _repository.Get();
+                        return tags?
+                            .Select(tag => tag.MapToTagDTO());
+                    }, 
+                    cancellationToken);
 
             return new Result<IEnumerable<TagDTO>?>(response);
         }

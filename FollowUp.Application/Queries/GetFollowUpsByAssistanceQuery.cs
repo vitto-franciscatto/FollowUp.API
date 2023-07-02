@@ -7,9 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FollowUp.Application.Queries.GetFollowUpByAssistance
+namespace FollowUp.Application.Queries
 {
-    public class GetFollowUpsByAssistanceQuery : IRequest<Result<IEnumerable<FollowUpDTO>>>
+    public class GetFollowUpsByAssistanceQuery
+        : IRequest<Result<IEnumerable<FollowUpDTO>>>
     {
         public int AssistanceId { get; set; } = 0;
     }

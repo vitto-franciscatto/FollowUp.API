@@ -14,20 +14,26 @@ namespace FollowUp.Infra.Repos
             _ctx = ctx;
         }
 
-        public async Task<Domain.FollowUp> CreateAsync(Domain.FollowUp entity)
+        public async Task<Domain.FollowUp> CreateAsync(
+            Domain.FollowUp entity)
         {
             FollowUpDAL dal = entity.MapToFollowUpDAL();
             await _ctx.Set<FollowUpDAL>().AddAsync(dal);
             await _ctx.SaveChangesAsync();
 
-            IEnumerable<int>? tagIds = dal.Tags?.Select(_ => _.TagId);
+            IEnumerable<int>? tagIds = dal.Tags?
+                .Select(_ => _.TagId);
             List<TagDAL>? tags = tagIds is null ? 
                 null : 
-                await _ctx.Set<TagDAL>().Where(_ => tagIds.Contains(_.Id)).ToListAsync();
+                await _ctx
+                    .Set<TagDAL>()
+                    .Where(_ => tagIds.Contains(_.Id))
+                    .ToListAsync();
 
             dal.Tags = dal.Tags?.Select(_ => 
             {
-                TagDAL? thisTag = tags?.Single(tag => tag.Id == _.TagId);
+                TagDAL? thisTag = tags?
+                    .Single(tag => tag.Id == _.TagId);
 
                 return new DALs.FollowUpTag()
                 {
@@ -41,7 +47,8 @@ namespace FollowUp.Infra.Repos
             return dal.MapToFollowUp();
         }
 
-        public async Task<IEnumerable<Domain.FollowUp>?> GetByAssistance(int assistanceId)
+        public async Task<IEnumerable<Domain.FollowUp>?> GetByAssistance(
+            int assistanceId)
         {
             IEnumerable<FollowUpDAL>? dals = await _ctx
                 .Set<FollowUpDAL>()

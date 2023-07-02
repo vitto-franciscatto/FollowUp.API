@@ -5,7 +5,8 @@ namespace FollowUp.Application.Commands.CreateFollowUp
 {
     internal static class CreateFollowUpCommandMapper
     {
-        internal static Domain.FollowUp MapToFollowUp(this CreateFollowUpCommand command)
+        internal static Domain.FollowUp MapToFollowUp(
+            this CreateFollowUpCommand command)
         {
             return Domain.FollowUp.Create(
                 0,
@@ -15,7 +16,9 @@ namespace FollowUp.Application.Commands.CreateFollowUp
                 command.Message, 
                 command.CreatedAt, 
                 command.OccuredAt, 
-                command.TagIds?.Select(id => Tag.Create(id, string.Empty)).ToList()
+                command.TagIds?
+                    .Select(id => Tag.Create(id, string.Empty))
+                    .ToList()
                 );
         }
     }

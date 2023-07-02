@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 
 namespace FollowUp.Application.Handlers.NotificationHandler
 {
-    internal class TagAddedNotificationHandler : INotificationHandler<TagAddNotification>
+    internal class TagAddedNotificationHandler 
+        : INotificationHandler<TagAddNotification>
     {
         private readonly ICacheService _cacheService;
         public TagAddedNotificationHandler(ICacheService cacheService)
@@ -17,9 +18,13 @@ namespace FollowUp.Application.Handlers.NotificationHandler
             _cacheService = cacheService;
         }
 
-        public async Task Handle(TagAddNotification notification, CancellationToken cancellationToken)
+        public async Task Handle(
+            TagAddNotification notification, 
+            CancellationToken cancellationToken)
         {
-            await _cacheService.RemoveAsync("followUpsAPI_tags", cancellationToken);
+            await _cacheService.RemoveAsync(
+                "followUpsAPI_tags", 
+                cancellationToken);
         }
     }
 }
