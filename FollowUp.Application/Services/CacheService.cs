@@ -19,6 +19,7 @@ namespace FollowUp.Application.Services
         {
             _distributedCache = distributedCache;
         }
+
         public async Task<T?> GetAsync<T>(
             string key, 
             CancellationToken cancellationToken = default) where T : class
@@ -86,6 +87,11 @@ namespace FollowUp.Application.Services
             await _distributedCache.SetStringAsync(
                 key, 
                 serializedValue, 
+                new DistributedCacheEntryOptions() 
+                { 
+                    SlidingExpiration = TimeSpan.FromMinutes(15), 
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1) 
+                }, 
                 cancellationToken);
 
             _cacheKeys.TryAdd(key, false);
