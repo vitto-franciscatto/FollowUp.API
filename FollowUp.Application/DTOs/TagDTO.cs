@@ -10,9 +10,9 @@ namespace FollowUp.Application.DTOs
     public class TagDTO
     {
         [JsonProperty("id")]
-        public int Id { get; set; }
+        public int Id { get; set; } = 0;
 
         [JsonProperty("name")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
     }
 }
