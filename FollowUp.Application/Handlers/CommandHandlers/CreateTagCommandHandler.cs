@@ -35,7 +35,7 @@ namespace FollowUp.Application.Handlers.CommandHandlers
 
             Tag newTag = await _tagRepository.CreateAsync(command.MapToTag());
 
-            await _publisher.Publish(new TagAddNotification() { Tag = newTag });
+            await _publisher.Publish(new TagAddNotification() { Tag = newTag }, cancellationToken);
 
             return new Result<TagDTO>(newTag.MapToTagDTO());
         }

@@ -28,7 +28,7 @@ namespace FollowUp.Application.Handlers.CommandHandlers
         {
             try
             {
-                var validatioNResult = await _validator.ValidateAsync(request);
+                var validatioNResult = await _validator.ValidateAsync(request, cancellationToken);
                 if(!validatioNResult.IsValid)
                 {
                     return new Result<FollowUpDTO>(new ArgumentException(validatioNResult.Errors.First().ErrorMessage));
@@ -36,7 +36,7 @@ namespace FollowUp.Application.Handlers.CommandHandlers
 
                 Domain.FollowUp newFollowUp =  await _repo.CreateAsync(request.MapToFollowUp());
 
-                await _publisher.Publish(new FollowUpAddedNotification() { FollowUp = newFollowUp });
+                await _publisher.Publish(new FollowUpAddedNotification() { FollowUp = newFollowUp }, cancellationToken);
 
                 return new Result<FollowUpDTO>(newFollowUp.MapToFollowUpDTO());
             }
