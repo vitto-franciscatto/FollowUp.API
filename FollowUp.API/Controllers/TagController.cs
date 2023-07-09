@@ -6,10 +6,12 @@ using LanguageExt.Common;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using FollowUp.API.Authentication;
 
 namespace FollowUp.API.Controllers
 {
     [ApiController]
+    [ServiceFilter(typeof(ApiKeyAuthenticationFilter))]
     public class TagController : Controller
     {
         private readonly IMediator _mediator;

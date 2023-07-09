@@ -1,3 +1,5 @@
+using FollowUp.API.Authentication;
+using FollowUp.API.Swagger;
 using FollowUp.Application;
 using FollowUp.Infra;
 
@@ -10,10 +12,11 @@ ConfigurationManager configuration = builder.Configuration;
 services.ConfigureInfra(configuration);
 services.ConfigureApplication(configuration);
 
+services.ConfigureApiKeyAuthentication();
 services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 services.AddEndpointsApiExplorer();
-services.AddSwaggerGen();
+services.ConfigureSwagger();
 
 WebApplication app = builder.Build();
 

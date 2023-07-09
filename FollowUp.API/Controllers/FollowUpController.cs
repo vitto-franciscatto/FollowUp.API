@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using FollowUp.API.Authentication;
 using FollowUp.API.Requests;
 using LanguageExt.Common;
 using FollowUp.Application.DTOs;
@@ -9,6 +10,7 @@ using FollowUp.Application.Queries;
 namespace FollowUps.API.Controllers
 {
     [ApiController]
+    [ServiceFilter(typeof(ApiKeyAuthenticationFilter))]
     public class FollowUpController : Controller
     {
         private readonly IMediator _mediator;
