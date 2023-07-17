@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FollowUp.Application.Notifications
 {
-    public class TagAddNotification : INotification
+    public class TagAddedNotification : INotification
     {
         public Tag Tag { get; set; }
     }

@@ -5,6 +5,7 @@ using FollowUp.Application.Interfaces;
 using FollowUp.Application.Notifications;
 using LanguageExt.Common;
 using MediatR;
+using Serilog;
 
 namespace FollowUp.Application.Handlers.CommandHandlers
 {
@@ -15,25 +16,27 @@ namespace FollowUp.Application.Handlers.CommandHandlers
         private readonly IFollowUpRepository _repo;
         private readonly IValidator<CreateFollowUpCommand> _validator;
         private readonly IPublisher _publisher;
+        private readonly ILogger _logger;
 
         public CreateFollowUpCommandHandler(
             IFollowUpRepository repo,
             IValidator<CreateFollowUpCommand> validator,
-            IPublisher publisher)
+            IPublisher publisher, ILogger logger)
         {
             _repo = repo;
             _validator = validator;
             _publisher = publisher;
+            _logger = logger;
         }
 
         public async Task<Result<FollowUpDTO>> Handle(
-            CreateFollowUpCommand request, 
+            CreateFollowUpCommand command, 
             CancellationToken cancellationToken)
         {
             try
             {
                 var validatioNResult = await _validator.ValidateAsync(
-                    request, 
+                    command, 
                     cancellationToken);
                 if(!validatioNResult.IsValid)
                 {
@@ -43,7 +46,7 @@ namespace FollowUp.Application.Handlers.CommandHandlers
                 }
 
                 Domain.FollowUp newFollowUp =  
-                    await _repo.CreateAsync(request.MapToFollowUp());
+                    await _repo.CreateAsync(command.MapToFollowUp());
 
                 await _publisher.Publish(
                     new FollowUpAddedNotification() 
@@ -57,6 +60,8 @@ namespace FollowUp.Application.Handlers.CommandHandlers
             }
             catch (Exception error)
             {
+                _logger.Error(error, "Failed to handle {@CommandName}", nameof(CreateFollowUpCommand));
+                
                 return new Result<FollowUpDTO>(error);
             }
         }

@@ -1,5 +1,6 @@
 using FollowUp.API.Authentication;
 using FollowUp.API.Swagger;
+using FollowUp.API.Configurations;
 using FollowUp.Application;
 using FollowUp.Infra;
 
@@ -8,6 +9,8 @@ IServiceCollection services = builder.Services;
 ConfigurationManager configuration = builder.Configuration;
 
 // Add services to the container.
+
+services.ConfigureSerilog(configuration);
 
 services.ConfigureInfra(configuration);
 services.ConfigureApplication(configuration);

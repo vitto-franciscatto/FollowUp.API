@@ -6,6 +6,7 @@ using LanguageExt.Common;
 using FollowUp.Application.DTOs;
 using MediatR;
 using FollowUp.Application.Queries;
+using ILogger = Serilog.ILogger;
 
 namespace FollowUps.API.Controllers
 {
@@ -14,10 +15,12 @@ namespace FollowUps.API.Controllers
     public class FollowUpController : Controller
     {
         private readonly IMediator _mediator;
+        private readonly ILogger _logger;
         public FollowUpController(
-            IMediator mediator)
+            IMediator mediator, ILogger logger)
         {
             _mediator = mediator;
+            _logger = logger;
         }
 
         [HttpGet("[controller]/[action]/{assistanceId}")]
@@ -25,29 +28,41 @@ namespace FollowUps.API.Controllers
             int assistanceId, 
             CancellationToken cancellationToken)
         {
-            Result<IEnumerable<FollowUpDTO>> response = await _mediator.Send(
-                new GetFollowUpsByAssistanceQuery() 
-                { 
-                    AssistanceId = assistanceId 
-                }, 
-                cancellationToken);
+            try
+            {
+                Result<IEnumerable<FollowUpDTO>> response = await _mediator.Send(
+                    new GetFollowUpsByAssistanceQuery() 
+                    { 
+                        AssistanceId = assistanceId 
+                    }, 
+                    cancellationToken);
 
-            return response.Match<IActionResult>(
-                dto =>
-                {
-                    if (!dto.Any())
+                return response.Match<IActionResult>(
+                    dto =>
                     {
-                        return StatusCode((int)HttpStatusCode.NoContent);
-                    }
+                        if (!dto.Any())
+                        {
+                            return StatusCode((int)HttpStatusCode.NoContent);
+                        }
 
-                    return StatusCode(
-                        (int)HttpStatusCode.Created, 
-                        dto);
-                },
+                        return StatusCode(
+                            (int)HttpStatusCode.Created, 
+                            dto);
+                    },
 
-                error => StatusCode(
-                    (int)HttpStatusCode.UnprocessableEntity, 
-                    error.Message));
+                    error => StatusCode(
+                        (int)HttpStatusCode.UnprocessableEntity, 
+                        error.Message));
+            }
+            catch (Exception error)
+            {
+                _logger.Error(
+                    error, 
+                    "Failed to get followups for assistance {@AssistanceId}", 
+                    assistanceId);
+                
+                return StatusCode((int)HttpStatusCode.InternalServerError);
+            }
         }
 
         [HttpPost("[controller]")]
@@ -55,18 +70,31 @@ namespace FollowUps.API.Controllers
             [FromBody] CreateFollowUpRequest request, 
             CancellationToken cancellationToken)
         {
-            Result<FollowUpDTO> response = await _mediator.Send
+            try
+            {
+                Result<FollowUpDTO> response = await _mediator.Send
                 
                 (request.MapToCommand(DateTime.Now), 
-                cancellationToken);
+                    cancellationToken);
 
-            return response.Match<IActionResult>(
-                dto => StatusCode(
-                    (int)HttpStatusCode.Created, 
-                    dto), 
-                error => StatusCode(
-                    (int)HttpStatusCode.UnprocessableEntity, 
-                    error.Message));
+                return response.Match<IActionResult>(
+                    dto => StatusCode(
+                        (int)HttpStatusCode.Created, 
+                        dto), 
+                    error => StatusCode(
+                        (int)HttpStatusCode.UnprocessableEntity, 
+                        error.Message));
+            }
+            catch (Exception error)
+            {
+                _logger.Error(
+                    error, 
+                    "Failed to create followup for assistance {@AssistanceId} by {@UserId}", 
+                    request.AssistanceId, 
+                    request.Author?.Id);
+                
+                return StatusCode((int)HttpStatusCode.InternalServerError);
+            }
         }
     }
 }
