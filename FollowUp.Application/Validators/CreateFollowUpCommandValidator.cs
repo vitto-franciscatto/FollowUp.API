@@ -56,12 +56,7 @@ namespace FollowUp.Application.Validators
                     {
                         Tag? tag = await _tagRepository.Get(tagId);
 
-                        if (tag is null)
-                        {
-                            return false;
-                        }
-
-                        return true;
+                        return tag is not null;
                     })
                 .WithMessage("O TagId: {PropertyValue} não está cadastrado");
         }

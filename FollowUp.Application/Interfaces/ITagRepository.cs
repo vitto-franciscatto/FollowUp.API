@@ -9,8 +9,8 @@ namespace FollowUp.Application.Interfaces
 {
     public interface ITagRepository
     {
-        Task<IEnumerable<Tag>> Get();
+        Task<IEnumerable<Tag>?> Get();
         Task<Tag?> Get(int tagId);
-        Task<Tag> CreateAsync(Tag tag);
+        Task<Tag?> CreateAsync(Tag tag);
     }
 }

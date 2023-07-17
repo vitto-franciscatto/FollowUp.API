@@ -6,6 +6,7 @@ using FollowUp.Application.Notifications;
 using FollowUp.Domain;
 using LanguageExt.Common;
 using MediatR;
+using Serilog;
 
 namespace FollowUp.Application.Handlers.CommandHandlers
 {
@@ -15,40 +16,51 @@ namespace FollowUp.Application.Handlers.CommandHandlers
         private readonly ITagRepository _tagRepository;
         private readonly IValidator<CreateTagCommand> _validator;
         private readonly IPublisher _publisher;
+        private readonly ILogger _logger;
 
         public CreateTagCommandHandler(
             ITagRepository tagRepository,
             IValidator<CreateTagCommand> validator,
-            IPublisher publisher)
+            IPublisher publisher, ILogger logger)
         {
             _tagRepository = tagRepository;
             _validator = validator;
             _publisher = publisher;
+            _logger = logger;
         }
 
         public async Task<Result<TagDTO>> Handle(
             CreateTagCommand command, 
             CancellationToken cancellationToken)
         {
-            var validationResult = _validator.Validate(command);
-            if (!validationResult.IsValid)
+            try
             {
-                return new Result<TagDTO>(
-                    new ArgumentException(
-                        validationResult.Errors.First().ErrorMessage));
+                var validationResult = _validator.Validate(command);
+                if (!validationResult.IsValid)
+                {
+                    return new Result<TagDTO>(
+                        new ArgumentException(
+                            validationResult.Errors.First().ErrorMessage));
+                }
+
+                Tag newTag = 
+                    await _tagRepository.CreateAsync(command.MapToTag());
+
+                await _publisher.Publish(
+                    new TagAddedNotification() 
+                    { 
+                        Tag = newTag 
+                    }, 
+                    cancellationToken);
+
+                return new Result<TagDTO>(newTag.MapToTagDTO());
             }
-
-            Tag newTag = 
-                await _tagRepository.CreateAsync(command.MapToTag());
-
-            await _publisher.Publish(
-                new TagAddNotification() 
-                { 
-                    Tag = newTag 
-                }, 
-                cancellationToken);
-
-            return new Result<TagDTO>(newTag.MapToTagDTO());
+            catch (Exception error)
+            {
+                _logger.Error(error, "Failed to handle {@CommandName}", nameof(CreateTagCommand));
+                
+                return new Result<TagDTO>(error);
+            }
         }
     }
 }
