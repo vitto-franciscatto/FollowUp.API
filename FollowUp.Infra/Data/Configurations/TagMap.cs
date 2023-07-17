@@ -16,7 +16,7 @@ namespace FollowUp.Infra.Data.Configurations
         public void Configure(
             EntityTypeBuilder<TagDAL> builder)
         {
-            builder.ToTable("Tags", "tag");
+            builder.ToTable("Tags", "followup");
 
             builder.HasKey(x => x.Id);
 

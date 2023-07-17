@@ -9,7 +9,7 @@ namespace FollowUp.Infra.Data.Configurations
         public void Configure(
             EntityTypeBuilder<FollowUpDAL> builder)
         {
-            builder.ToTable("FollowUps", "followUp");
+            builder.ToTable("FollowUps", "followup");
 
             builder.HasKey(x => x.Id);
 

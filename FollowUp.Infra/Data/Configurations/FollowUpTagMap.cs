@@ -15,7 +15,7 @@ namespace FollowUp.Infra.Data.Configurations
         public void Configure(
             EntityTypeBuilder<FollowUpTag> builder)
         {
-            builder.ToTable("FollowUpTag", "followUp");
+            builder.ToTable("FollowUpTag", "followup");
 
             builder.HasKey(x => new { x.FollowUpId, x.TagId });
 
