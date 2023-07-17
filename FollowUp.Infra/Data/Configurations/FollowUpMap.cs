@@ -9,7 +9,7 @@ namespace FollowUp.Infra.Data.Configurations
         public void Configure(
             EntityTypeBuilder<FollowUpDAL> builder)
         {
-            builder.ToTable("FollowUps", "followUp");
+            builder.ToTable("FollowUps", "followup");
 
             builder.HasKey(x => x.Id);
 
@@ -52,7 +52,7 @@ namespace FollowUp.Infra.Data.Configurations
             builder.Property(_ => _.Message)
                 .IsRequired()
                 .HasColumnName("Message")
-                .HasColumnType("nvarchar(8000)");
+                .HasColumnType("nvarchar(4000)");
 
             builder.Property(_ => _.CreatedAt)
                 .IsRequired()

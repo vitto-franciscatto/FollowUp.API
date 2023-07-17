@@ -4,6 +4,7 @@ using FollowUp.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FollowUp.Infra.Migrations
 {
     [DbContext(typeof(FollowUpDbContext))]
-    partial class FollowUpDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230717121254_increse-contact-and-message-columns-size")]
+    partial class incresecontactandmessagecolumnssize
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,7 +39,7 @@ namespace FollowUp.Infra.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("FollowUpTag", "followup");
+                    b.ToTable("FollowUpTag", "followUp");
                 });
 
             modelBuilder.Entity("FollowUp.Infra.FollowUpDAL", b =>
@@ -88,7 +91,7 @@ namespace FollowUp.Infra.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FollowUps", "followup");
+                    b.ToTable("FollowUps", "followUp");
                 });
 
             modelBuilder.Entity("FollowUp.Infra.TagDAL", b =>
@@ -107,7 +110,7 @@ namespace FollowUp.Infra.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tags", "followup");
+                    b.ToTable("Tags", "tag");
                 });
 
             modelBuilder.Entity("FollowUp.Infra.DALs.FollowUpTag", b =>
