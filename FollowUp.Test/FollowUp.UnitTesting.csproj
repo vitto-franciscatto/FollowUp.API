@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FollowUp.Domain\FollowUp.Domain.csproj" />
+    <ProjectReference Include="..\FollowUp.API\FollowUp.API.csproj" />
   </ItemGroup>
 
 </Project>

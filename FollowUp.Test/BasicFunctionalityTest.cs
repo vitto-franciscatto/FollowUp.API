@@ -1,13 +1,14 @@
-using FollowUp.Domain;
+
+using FollowUp.API.Features.Tags;
 
 namespace FollowUp.UnitTesting
 {
     public class BasicFunctionalityTest
     {
-        private readonly Domain.FollowUp _followUp;
+        private readonly API.Features.FollowUps.FollowUp _followUp;
         public BasicFunctionalityTest()
         {
-            _followUp = Domain.FollowUp.Create(
+            _followUp = API.Features.FollowUps.FollowUp.Create(
                 21, 
                 2134, 
                 null, 

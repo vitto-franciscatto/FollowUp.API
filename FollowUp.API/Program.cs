@@ -1,8 +1,11 @@
-using FollowUp.API.Authentication;
-using FollowUp.API.Swagger;
-using FollowUp.API.Configurations;
-using FollowUp.Application;
-using FollowUp.Infra;
+using FollowUp.API.Features;
+using FollowUp.API.Features.Authentication;
+using FollowUp.API.Features.Caches;
+using FollowUp.API.Features.DataBases;
+using FollowUp.API.Features.FollowUps;
+using FollowUp.API.Features.Serilog;
+using FollowUp.API.Features.Swagger;
+using FollowUp.API.Features.Tags;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 IServiceCollection services = builder.Services;
@@ -12,8 +15,11 @@ ConfigurationManager configuration = builder.Configuration;
 
 services.ConfigureSerilog(configuration);
 
-services.ConfigureInfra(configuration);
-services.ConfigureApplication(configuration);
+services.ConfigureFeatures(configuration);
+services.ConfigureCaches(configuration);
+services.ConfigureDataBases(configuration);
+services.ConfigureFollowUps(configuration);
+services.ConfigureTags(configuration);
 
 services.ConfigureApiKeyAuthentication();
 services.AddControllers();
