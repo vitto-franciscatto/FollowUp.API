@@ -8,19 +8,16 @@ namespace FollowUp.Domain
 {
     public class Tag
     {
-        private Tag() { }
         private Tag(
             int id, 
             string name) 
         {
-            _id = id;
-            _name = name;
+            Id = id;
+            Name = name;
         }
-        private int _id { get; set; } = 0;
-        private string _name { get; set; } = string.Empty;
-
-        public int Id => _id;
-        public string Name => _name;
+        
+        public int Id { get; private set; }
+        public string Name { get; private set; }
 
         public static Tag Create(int id, string name)
         {

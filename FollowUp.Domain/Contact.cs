@@ -8,23 +8,19 @@ namespace FollowUp.Domain
 {
     public class Contact
     {
-        internal Contact(
+        private Contact(
             string name, 
             string phoneNumber, 
             string job)
         {
-            _name = name;
-            _phoneNumber = phoneNumber;
-            _job = job;
+            Name = name;
+            PhoneNumber = phoneNumber;
+            Job = job;
         }
 
-        internal string _name { get; set; } = string.Empty;
-        internal string _phoneNumber { get; set; }
-        internal string _job { get; set; } = string.Empty;
-
-        public string Name => _name;
-        public string PhoneNumber => _phoneNumber;
-        public string Job => _job;
+        public string Name { get; private set; }
+        public string PhoneNumber { get; private set; }
+        public string Job { get; private set; }
 
         public static Contact Create(
             string name,

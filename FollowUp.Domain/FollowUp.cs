@@ -7,45 +7,36 @@ namespace FollowUp.Domain
         private FollowUp(
             int id, 
             int assistanceId, 
-            Author? Author, 
+            Author? author, 
             Contact? contact, 
             string message, 
             DateTime createdAt, 
             DateTime occuredAt, 
             List<Tag>? tags)
         {
-            _id = id;
-            _assistanceId = assistanceId;
-            _author = Author;
-            _contact = contact;
-            _message = message;
-            _createdAt = createdAt;
-            _occuredAt = occuredAt;
-            _tags = tags;
+            Id = id;
+            AssistanceId = assistanceId;
+            Author = author;
+            Contact = contact;
+            Message = message;
+            CreatedAt = createdAt;
+            OccuredAt = occuredAt;
+            Tags = tags;
         }
 
-        private int _id { get; set; } = 0;
-        private int _assistanceId { get; set; } = 0;
-        private Author? _author { get; set; }
-        private Contact? _contact { get; set; }
-        private string _message { get; set; } = string.Empty;
-        private DateTime _createdAt { get; set; } = DateTime.MinValue;
-        private DateTime _occuredAt { get; set; } = DateTime.MinValue;
-        private List<Tag>? _tags { get; set; }
-
-        public int Id => _id;
-        public int AssistanceId => _assistanceId;
-        public Author? Author => _author;
-        public Contact? Contact => _contact;
-        public string Message => _message;
-        public DateTime CreatedAt => _createdAt;
-        public DateTime OccuredAt => _occuredAt;
-        public List<Tag>? Tags => _tags;
+        public int Id { get; private set; }
+        public int AssistanceId { get; private set; }
+        public Author? Author { get; private set; }
+        public Contact? Contact { get; private set; }
+        public string Message { get; private set; }
+        public DateTime CreatedAt { get; private set; }
+        public DateTime OccuredAt { get; private set; }
+        public List<Tag>? Tags { get; private set; }
 
         public static FollowUp Create(
             int id, 
             int assistanceId,
-            Author? Author,
+            Author? author,
             Contact? contact,
             string message,
             DateTime createdAt,
@@ -55,7 +46,7 @@ namespace FollowUp.Domain
             return new FollowUp(
                 id,
                 assistanceId,
-                Author,
+                author,
                 contact,
                 message,
                 createdAt,
