@@ -4,6 +4,10 @@ namespace FollowUp.Domain
 {
     public class FollowUp
     {
+        public FollowUp()
+        {
+        }
+
         private FollowUp(
             int id, 
             int assistanceId, 

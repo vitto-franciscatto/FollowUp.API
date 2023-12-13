@@ -19,6 +19,8 @@ namespace FollowUp.Domain
         public int Id { get; private set; }
         public string Name { get; private set; }
 
+        public List<FollowUp> FollowUps { get; private set; }
+
         public static Tag Create(int id, string name)
         {
             return new Tag(id, name);

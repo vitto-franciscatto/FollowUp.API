@@ -1,12 +1,5 @@
-﻿using FollowUp.Domain;
-using FollowUp.Infra.DALs;
-using FollowUp.Infra.Data.Configurations;
+﻿using FollowUp.Infra.Data.Configurations;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FollowUp.Infra.Data.Context
 {
@@ -20,12 +13,8 @@ namespace FollowUp.Infra.Data.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder
-                .ApplyConfiguration<FollowUpDAL>(new FollowUpMap());
-            modelBuilder
-                .ApplyConfiguration<TagDAL>(new TagMap());
-            modelBuilder
-                .ApplyConfiguration<FollowUpTag>(new FollowUpTagMap());
+            modelBuilder.ApplyConfiguration(new FollowUpMap());
+            modelBuilder.ApplyConfiguration(new TagMap());
 
             base.OnModelCreating(modelBuilder);
         }

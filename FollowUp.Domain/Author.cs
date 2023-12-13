@@ -8,6 +8,10 @@ namespace FollowUp.Domain
 {
     public class Author
     {
+        public Author()
+        {
+        }
+
         private Author(
             int id, 
             string extension)

@@ -8,6 +8,10 @@ namespace FollowUp.Domain
 {
     public class Contact
     {
+        public Contact()
+        {
+        }
+
         private Contact(
             string name, 
             string phoneNumber, 

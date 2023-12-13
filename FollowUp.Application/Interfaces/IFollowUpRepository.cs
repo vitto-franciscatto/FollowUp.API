@@ -10,6 +10,6 @@ namespace FollowUp.Application.Interfaces
     public interface IFollowUpRepository
     {
         Task<IEnumerable<Domain.FollowUp>?> GetByAssistance(int assistanceId);
-        Task<Domain.FollowUp?> CreateAsync(Domain.FollowUp entity);
+        Task<bool> AddAsync(Domain.FollowUp entity);
     }
 }

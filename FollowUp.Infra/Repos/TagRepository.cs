@@ -2,11 +2,6 @@
 using FollowUp.Domain;
 using FollowUp.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Serilog;
 
 namespace FollowUp.Infra.Repos
@@ -26,11 +21,10 @@ namespace FollowUp.Infra.Repos
         {
             try
             {
-                TagDAL dal = tag.MapToTagDAL();
-                await _ctx.Set<TagDAL>().AddAsync(dal);
+                await _ctx.Set<Tag>().AddAsync(tag);
                 await _ctx.SaveChangesAsync();
 
-                return dal.MapToTag();
+                return tag;
             }
             catch (Exception error)
             {
@@ -47,11 +41,11 @@ namespace FollowUp.Infra.Repos
         {
             try
             {
-                List<TagDAL> dals = await _ctx
-                    .Set<TagDAL>()
+                List<Tag> retrievedTags = await _ctx
+                    .Set<Tag>()
                     .ToListAsync();
 
-                return dals.Select(dal => dal.MapToTag());
+                return retrievedTags;
             }
             catch (Exception error)
             {
@@ -67,11 +61,11 @@ namespace FollowUp.Infra.Repos
         {
             try
             {
-                TagDAL? dal = await _ctx
-                    .Set<TagDAL>()
-                    .SingleOrDefaultAsync(_ => _.Id == tagId);
+                Tag? retrievedTag = await _ctx
+                    .Set<Tag>()
+                    .SingleOrDefaultAsync(tag => tag.Id == tagId);
 
-                return dal?.MapToTag();
+                return retrievedTag;
             }
             catch (Exception error)
             {

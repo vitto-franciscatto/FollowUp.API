@@ -4,71 +4,70 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace FollowUp.Infra.Data.Configurations
 {
     public class FollowUpMap 
-        : IEntityTypeConfiguration<FollowUpDAL>
+        : IEntityTypeConfiguration<Domain.FollowUp>
     {
         public void Configure(
-            EntityTypeBuilder<FollowUpDAL> builder)
+            EntityTypeBuilder<Domain.FollowUp> builder)
         {
             builder.ToTable("FollowUps", "followup");
 
-            builder.HasKey(x => x.Id);
+            builder.HasKey(followup => followup.Id);
 
-            builder.Property(_ => _.Id)
+            builder.Property(followup => followup.Id)
                 .IsRequired()
                 .UseIdentityColumn(1, 1)
                 .HasColumnName("Id")
                 .HasColumnType("int");
 
-            builder.Property(_ => _.AssistanceId)
+            builder.Property(followup => followup.AssistanceId)
                 .IsRequired()
                 .HasColumnName("AssistanceId")
                 .HasColumnType("int");
 
-            builder.Property(_ => _.AuthorId)
+            builder.OwnsOne(followup => followup.Author)
+                .Property(author => author.Id)
                 .IsRequired()
                 .HasColumnName("AuthorId")
                 .HasColumnType("int");
 
-            builder.Property(_ => _.AuthorExtension)
+            builder.OwnsOne(followup => followup.Author)
+                .Property(author => author.Extension)
                 .IsRequired(false)
                 .HasColumnName("AuthorExtension")
                 .HasColumnType("nvarchar(50)");
 
-            builder.Property(_ => _.ContactName)
+            builder.OwnsOne(followup => followup.Contact)
+                .Property(contact => contact.Name)
                 .IsRequired(false)
                 .HasColumnName("ContactName")
                 .HasColumnType("nvarchar(500)");
 
-            builder.Property(_ => _.ContactPhoneNumber)
+            builder.OwnsOne(followup => followup.Contact)
+                .Property(contact => contact.PhoneNumber)
                 .IsRequired(false)
                 .HasColumnName("ContactPhoneNumber")
                 .HasColumnType("nvarchar(19)");
 
-            builder.Property(_ => _.ContactJob)
+            builder.OwnsOne(followup => followup.Contact)
+                .Property(contact => contact.Job)
                 .IsRequired(false)
                 .HasColumnName("ContactJob")
                 .HasColumnType("nvarchar(255)");
 
-            builder.Property(_ => _.Message)
+            builder.Property(followup => followup.Message)
                 .IsRequired()
                 .HasColumnName("Message")
                 .HasColumnType("nvarchar(4000)");
 
-            builder.Property(_ => _.CreatedAt)
+            builder.Property(followup => followup.CreatedAt)
                 .IsRequired()
                 .HasColumnName("CreatedAt")
                 .HasColumnType("datetime");
 
-            builder.Property(_ => _.OccuredAt)
+            builder.Property(followup => followup.OccuredAt)
                 .IsRequired()
                 .HasColumnName("OccuredAt")
                 .HasColumnType("datetime");
-
-            builder.HasMany(_ => _.Tags)
-                .WithOne(x => x.FollowUp)
-                .HasForeignKey(_ => _.FollowUpId)
-                .HasConstraintName("FK_Tags_FollowUp")
-                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

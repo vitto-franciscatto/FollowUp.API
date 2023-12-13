@@ -1,5 +1,4 @@
 ﻿using FollowUp.Application.Interfaces;
-using FollowUp.Infra.DALs;
 using FollowUp.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -18,39 +17,15 @@ namespace FollowUp.Infra.Repos
             _logger = logger;
         }
 
-        public async Task<Domain.FollowUp?> CreateAsync(
+        public async Task<bool> AddAsync(
             Domain.FollowUp entity)
         {
             try
             {
-                FollowUpDAL dal = entity.MapToFollowUpDAL();
-                await _ctx.Set<FollowUpDAL>().AddAsync(dal);
+                await _ctx.Set<Domain.FollowUp>().AddAsync(entity);
                 await _ctx.SaveChangesAsync();
 
-                IEnumerable<int>? tagIds = dal.Tags?
-                    .Select(_ => _.TagId);
-                List<TagDAL>? tags = tagIds is null ? 
-                    null : 
-                    await _ctx
-                        .Set<TagDAL>()
-                        .Where(_ => tagIds.Contains(_.Id))
-                        .ToListAsync();
-
-                dal.Tags = dal.Tags?.Select(_ => 
-                {
-                    TagDAL? thisTag = tags?
-                        .Single(tag => tag.Id == _.TagId);
-
-                    return new FollowUpTag()
-                    {
-                        FollowUpId = dal.Id, 
-                        FollowUp = dal, 
-                        TagId = _.TagId, 
-                        Tag = thisTag
-                    };
-                }).ToList();
-
-                return dal.MapToFollowUp();
+                return true;
             }
             catch (Exception error)
             {
@@ -60,7 +35,7 @@ namespace FollowUp.Infra.Repos
                     entity.AssistanceId, 
                     entity.Author?.Id);
                 
-                return null;
+                return false;
             }
         }
 
@@ -69,14 +44,13 @@ namespace FollowUp.Infra.Repos
         {
             try
             {
-                IEnumerable<FollowUpDAL>? dals = await _ctx
-                    .Set<FollowUpDAL>()
-                    .Where(_ => _.AssistanceId == assistanceId)
-                    .Include(_ => _.Tags)
-                    .ThenInclude(_ => _.Tag)
+                List<Domain.FollowUp>? retrievedFollowUps = await _ctx
+                    .Set<Domain.FollowUp>()
+                    .Where(followup => followup.AssistanceId == assistanceId)
+                    .Include(followup => followup.Tags)
                     .ToListAsync();
 
-                return dals.Select(_ => _.MapToFollowUp());
+                return retrievedFollowUps;
             }
             catch (Exception error)
             {
