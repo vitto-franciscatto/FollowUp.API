@@ -24,7 +24,7 @@ namespace FollowUp.API.Features.FollowUps.CreateFollowUp
             try
             {
                 await _cacheService.RemoveAsync(
-                    $"followUpsAPI_followUps_assistance_{notification.FollowUp.AssistanceId}", 
+                    $"followUpsAPI_followUps_identifierKey_{notification.FollowUp.IdentifierKey}", 
                     cancellationToken);
             }
             catch (Exception error)

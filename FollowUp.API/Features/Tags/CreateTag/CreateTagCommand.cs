@@ -4,7 +4,7 @@ using MediatR;
 
 namespace FollowUp.API.Features.Tags.CreateTag
 {
-    public class CreateTagCommand : IRequest<Result<TagDTO>>
+    public class CreateTagCommand : IRequest<Result<Tag>>
     {
         public string Name { get; set; } = string.Empty;
     }

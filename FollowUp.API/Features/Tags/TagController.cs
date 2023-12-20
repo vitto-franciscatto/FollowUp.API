@@ -27,21 +27,21 @@ namespace FollowUp.API.Features.Tags
         {
             try
             {
-                Result<IEnumerable<TagDTO>?> response = await _mediator.Send(
+                Result<IEnumerable<Tag>?> response = await _mediator.Send(
                     new GetAllTagsQuery(), 
                     cancellationToken);
 
                 return response.Match<IActionResult>(
-                    dtos => 
+                    tags => 
                     {
-                        if (dtos is null || dtos.Length() == 0)
+                        if (tags is null || tags.Length() == 0)
                         {
                             return StatusCode((int)HttpStatusCode.NoContent);
                         }
 
                         return StatusCode(
                             (int)HttpStatusCode.OK, 
-                            dtos);
+                            tags);
                     },
                     error => StatusCode(
                         (int)HttpStatusCode.UnprocessableEntity, 
@@ -63,14 +63,18 @@ namespace FollowUp.API.Features.Tags
         {
             try
             {
-                Result<TagDTO> response = await _mediator.Send(
+                Result<Tag> response = await _mediator.Send(
                     request.MapToCommand(), 
                     cancellationToken);
 
                 return response.Match(
-                    dto => StatusCode(
+                    tag => StatusCode(
                         (int)HttpStatusCode.Created, 
-                        dto), 
+                        new
+                        {
+                            Id = tag.Id, 
+                            Name = tag.Name
+                        }), 
                     error => StatusCode(
                         (int)HttpStatusCode.UnprocessableEntity, 
                         error.Message));

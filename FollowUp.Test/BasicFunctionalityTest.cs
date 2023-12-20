@@ -10,7 +10,7 @@ namespace FollowUp.UnitTesting
         {
             _followUp = API.Features.FollowUps.FollowUp.Create(
                 21, 
-                2134, 
+                "SIGA.CECOE-AssistanceId-" + 2134, 
                 null, 
                 null, 
                 "message", 

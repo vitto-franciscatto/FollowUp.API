@@ -6,7 +6,7 @@ using ILogger = Serilog.ILogger;
 namespace FollowUp.API.Features.Tags.CreateTag
 {
     public class CreateTagCommandHandler 
-        : IRequestHandler<CreateTagCommand, Result<TagDTO>>
+        : IRequestHandler<CreateTagCommand, Result<Tag>>
     {
         private readonly ITagRepository _tagRepository;
         private readonly IValidator<CreateTagCommand> _validator;
@@ -24,7 +24,7 @@ namespace FollowUp.API.Features.Tags.CreateTag
             _logger = logger;
         }
 
-        public async Task<Result<TagDTO>> Handle(
+        public async Task<Result<Tag>> Handle(
             CreateTagCommand command, 
             CancellationToken cancellationToken)
         {
@@ -33,28 +33,28 @@ namespace FollowUp.API.Features.Tags.CreateTag
                 var validationResult = _validator.Validate(command);
                 if (!validationResult.IsValid)
                 {
-                    return new Result<TagDTO>(
+                    return new Result<Tag>(
                         new ArgumentException(
                             validationResult.Errors.First().ErrorMessage));
                 }
 
-                Tag newTag = 
+                Tag registeredTag = 
                     await _tagRepository.CreateAsync(command.MapToTag());
 
                 await _publisher.Publish(
                     new TagAddedNotification() 
                     { 
-                        Tag = newTag 
+                        Tag = registeredTag 
                     }, 
                     cancellationToken);
 
-                return new Result<TagDTO>(newTag.MapToTagDTO());
+                return new Result<Tag>(registeredTag);
             }
             catch (Exception error)
             {
                 _logger.Error(error, "Failed to handle {@CommandName}", nameof(CreateTagCommand));
                 
-                return new Result<TagDTO>(error);
+                return new Result<Tag>(error);
             }
         }
     }

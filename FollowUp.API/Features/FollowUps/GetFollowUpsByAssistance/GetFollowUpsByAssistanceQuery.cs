@@ -4,8 +4,8 @@ using MediatR;
 namespace FollowUp.API.Features.FollowUps.GetFollowUpsByAssistance
 {
     public class GetFollowUpsByAssistanceQuery
-        : IRequest<Result<IEnumerable<FollowUpDTO>>>
+        : IRequest<Result<IEnumerable<FollowUp>>>
     {
-        public int AssistanceId { get; set; } = 0;
+        public string IdentifierKey { get; set; } = string.Empty;
     }
 }

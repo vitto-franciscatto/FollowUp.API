@@ -8,7 +8,7 @@ namespace FollowUp.API.Features.FollowUps.CreateFollowUp
 {
     public class CreateFollowUpCommandHandler 
         
-        : IRequestHandler<CreateFollowUpCommand, Result<FollowUpDTO>>
+        : IRequestHandler<CreateFollowUpCommand, Result<FollowUp>>
     {
         private readonly IFollowUpRepository _repo;
         private readonly ITagRepository _tagRepository;
@@ -29,7 +29,7 @@ namespace FollowUp.API.Features.FollowUps.CreateFollowUp
             _tagRepository = tagRepository;
         }
 
-        public async Task<Result<FollowUpDTO>> Handle(
+        public async Task<Result<FollowUp>> Handle(
             CreateFollowUpCommand command, 
             CancellationToken cancellationToken)
         {
@@ -40,7 +40,7 @@ namespace FollowUp.API.Features.FollowUps.CreateFollowUp
                     cancellationToken);
                 if(!validatioNResult.IsValid)
                 {
-                    return new Result<FollowUpDTO>(
+                    return new Result<FollowUp>(
                         new ArgumentException(
                             validatioNResult.Errors.First().ErrorMessage));
                 }
@@ -54,9 +54,9 @@ namespace FollowUp.API.Features.FollowUps.CreateFollowUp
                         .ToList();
                 }
 
-                var newFollowUp = FollowUp.Create(
+                var registeredFollowup = FollowUp.Create(
                     0,
-                    command.AssistanceId,
+                    command.IdentifierKey,
                     command.Author.MapToAuthor(),
                     command.Contact.MapToContact(),
                     command.Message,
@@ -65,29 +65,29 @@ namespace FollowUp.API.Features.FollowUps.CreateFollowUp
                     chosenTags
                 );
                 
-                bool wasFollowUpRegistered = await _repo.AddAsync(newFollowUp);
+                bool wasFollowUpRegistered = await _repo.AddAsync(registeredFollowup);
                 if (!wasFollowUpRegistered)
                 {
                     _logger.Error("Failed to persist followup to database");
                     
-                    return new Result<FollowUpDTO>(new Exception("FollowUp não foi salvo"));
+                    return new Result<FollowUp>(new Exception("FollowUp não foi salvo"));
                 }
 
                 await _publisher.Publish(
                     new FollowUpAddedNotification() 
                     { 
-                        FollowUp = newFollowUp 
+                        FollowUp = registeredFollowup 
                     }, 
                     cancellationToken);
 
-                return new Result<FollowUpDTO>(
-                    newFollowUp.MapToFollowUpDTO());
+                return new Result<FollowUp>(
+                    registeredFollowup);
             }
             catch (Exception error)
             {
                 _logger.Error(error, "Failed to handle {@CommandName}", nameof(CreateFollowUpCommand));
                 
-                return new Result<FollowUpDTO>(error);
+                return new Result<FollowUp>(error);
             }
         }
     }

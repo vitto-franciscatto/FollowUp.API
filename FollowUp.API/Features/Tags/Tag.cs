@@ -25,34 +25,6 @@ namespace FollowUp.API.Features.Tags
         }
     }
     
-    public class TagDTO
-    {
-        [JsonProperty("id")]
-        public int Id { get; set; } = 0;
-
-        [JsonProperty("name")]
-        public string Name { get; set; } = string.Empty;
-    }
-    
-    public static class TagDTOMapper
-    {
-        public static TagDTO MapToTagDTO(this Tag tag)
-        {
-            return new TagDTO() 
-            {
-                Id = tag.Id, 
-                Name = tag.Name
-            };
-        }
-
-        public static Tag MapToTag(this TagDTO dto)
-        {
-            return Tag.Create(
-                dto.Id, 
-                dto.Name);
-        }
-    }
-    
     public class TagMap 
         : IEntityTypeConfiguration<Tag>
     {

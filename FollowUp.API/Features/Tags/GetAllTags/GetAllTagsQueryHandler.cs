@@ -7,7 +7,7 @@ namespace FollowUp.API.Features.Tags.GetAllTags
 {
     public class GetAllTagsQueryHandler 
         
-        : IRequestHandler<GetAllTagsQuery, Result<IEnumerable<TagDTO>?>>
+        : IRequestHandler<GetAllTagsQuery, Result<IEnumerable<Tag>?>>
     {
         private readonly ITagRepository _repository;
         private readonly ICacheService _cacheService;
@@ -22,31 +22,30 @@ namespace FollowUp.API.Features.Tags.GetAllTags
             _logger = logger;
         }
 
-        public async Task<Result<IEnumerable<TagDTO>?>> Handle(
+        public async Task<Result<IEnumerable<Tag>?>> Handle(
             GetAllTagsQuery request, 
             CancellationToken cancellationToken)
         {
             try
             {
-                IEnumerable<TagDTO>? response = 
-                    await _cacheService.GetAsync<IEnumerable<TagDTO>>(
+                IEnumerable<Tag>? response = 
+                    await _cacheService.GetAsync<IEnumerable<Tag>>(
                         "followUpsAPI_tags", 
                         async () => 
                         {
                             IEnumerable<Tag>? tags = 
                                 await _repository.Get();
-                            return tags?
-                                .Select(tag => tag.MapToTagDTO());
+                            return tags;
                         }, 
                         cancellationToken);
 
-                return new Result<IEnumerable<TagDTO>?>(response);
+                return new Result<IEnumerable<Tag>?>(response);
             }
             catch (Exception error)
             {
                 _logger.Error(error, "Failed to handle {@QueryName}", nameof(GetAllTagsQuery));
 
-                return new Result<IEnumerable<TagDTO>?>(error);
+                return new Result<IEnumerable<Tag>?>(error);
             }
         }
     }

@@ -9,7 +9,7 @@ namespace FollowUp.API.Features.FollowUps.GetFollowUpsByAssistance
         
         : IRequestHandler<
             GetFollowUpsByAssistanceQuery, 
-            Result<IEnumerable<FollowUpDTO>>>
+            Result<IEnumerable<FollowUp>>>
     {
         private readonly IFollowUpRepository _repository;
         private readonly ICacheService _cacheService;
@@ -24,39 +24,38 @@ namespace FollowUp.API.Features.FollowUps.GetFollowUpsByAssistance
             _logger = logger;
         }
 
-        public async Task<Result<IEnumerable<FollowUpDTO>>> Handle(
+        public async Task<Result<IEnumerable<FollowUp>>> Handle(
             GetFollowUpsByAssistanceQuery request, 
             CancellationToken cancellationToken)
         {
             try
             {
-                IEnumerable<FollowUpDTO>? followUps = 
-                    await _cacheService.GetAsync<IEnumerable<FollowUpDTO>>(
-                        $"followUpsAPI_followUps_assistance_{request.AssistanceId}", 
+                IEnumerable<FollowUp>? followUps = 
+                    await _cacheService.GetAsync<IEnumerable<FollowUp>>(
+                        $"followUpsAPI_followUps_identifierKey_{request.IdentifierKey}", 
                         async () =>
                         {
                             IEnumerable<FollowUps.FollowUp>? followUps = 
                                 await _repository.GetByAssistance(
-                                    request.AssistanceId);
+                                    request.IdentifierKey);
 
-                            return followUps?
-                                .Select(followUp => followUp.MapToFollowUpDTO());
+                            return followUps;
                         },
                         cancellationToken);
 
                 if (followUps is null)
                 {
-                    return new Result<IEnumerable<FollowUpDTO>>(
-                        Enumerable.Empty<FollowUpDTO>());
+                    return new Result<IEnumerable<FollowUp>>(
+                        Enumerable.Empty<FollowUp>());
                 }
 
-                return new Result<IEnumerable<FollowUpDTO>>(followUps);
+                return new Result<IEnumerable<FollowUp>>(followUps);
             }
             catch (Exception error)
             {
                 _logger.Error(error, "Failed to handle {@QueryName}", nameof(GetFollowUpsByAssistanceQuery));
 
-                return new Result<IEnumerable<FollowUpDTO>>(error);
+                return new Result<IEnumerable<FollowUp>>(error);
             }
         }
     }

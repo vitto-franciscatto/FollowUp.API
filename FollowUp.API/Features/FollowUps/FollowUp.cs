@@ -1,49 +1,26 @@
-﻿using FollowUp.API.Features.FollowUps;
-using FollowUp.API.Features.Tags;
+﻿using FollowUp.API.Features.Tags;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Newtonsoft.Json;
 
 namespace FollowUp.API.Features.FollowUps
 {
     public class FollowUp
     {
-        public FollowUp()
-        {
-        }
-
-        private FollowUp(
-            int id, 
-            int assistanceId, 
-            Author? author, 
-            Contact? contact, 
-            string message, 
-            DateTime createdAt, 
-            DateTime occuredAt, 
-            List<Tag>? tags)
-        {
-            Id = id;
-            AssistanceId = assistanceId;
-            Author = author;
-            Contact = contact;
-            Message = message;
-            CreatedAt = createdAt;
-            OccuredAt = occuredAt;
-            Tags = tags;
-        }
+        //empty constructor to make ef happy
+        public FollowUp(){}
 
         public int Id { get; private set; }
-        public int AssistanceId { get; private set; }
+        public string IdentifierKey { get; private set; }
         public Author? Author { get; private set; }
         public Contact? Contact { get; private set; }
         public string Message { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime OccuredAt { get; private set; }
         public List<Tag>? Tags { get; private set; }
-
+        
         public static FollowUp Create(
             int id, 
-            int assistanceId,
+            string identifierKey,
             Author? author,
             Contact? contact,
             string message,
@@ -51,85 +28,19 @@ namespace FollowUp.API.Features.FollowUps
             DateTime occuredAt,
             List<Tag>? tags)
         {
-            return new FollowUp(
-                id,
-                assistanceId,
-                author,
-                contact,
-                message,
-                createdAt,
-                occuredAt,
-                tags);
-        }
-    }
-    
-    public class FollowUpDTO
-    {
-        [JsonProperty("id")]
-        public int Id { get; set; } = 0;
-
-        [JsonProperty("assistanceId")]
-        public int AssistanceId { get; set; } = 0;
-
-        [JsonProperty("author")]
-        public AuthorDTO? Author { get; set; }
-
-        [JsonProperty("contact")]
-        public ContactDTO? Contact { get; set; }
-
-        [JsonProperty("message")]
-        public string Message { get; set; } = string.Empty;
-
-        [JsonProperty("createdAt")]
-        public DateTime CreatedAt { get; set; } = DateTime.MinValue;
-
-        [JsonProperty("occuredAt")]
-        public DateTime OccuredAt { get; set; } = DateTime.MinValue;
-
-        [JsonProperty("tags")]
-        public IEnumerable<TagDTO>? Tags { get; set; }
-    }
-    
-    public static class FollowUpDTOMapper
-    {
-        public static FollowUpDTO MapToFollowUpDTO(
-            this FollowUp entity)
-        {
-            return new FollowUpDTO() 
+            var newFollowup = new FollowUp
             {
-                Id = entity.Id, 
-                AssistanceId = entity.AssistanceId, 
-                Author = entity.Author is null ?
-                    null 
-                    : entity.Author.MapToAuthor(), 
-                Contact = entity.Contact.MapToContact(), 
-                Message = entity.Message, 
-                CreatedAt = entity.CreatedAt, 
-                OccuredAt = entity.OccuredAt,
-                Tags = entity.Tags?
-                    .Select(_ => _.MapToTagDTO())
+                Id = id,
+                IdentifierKey = identifierKey,
+                Author = author,
+                Contact = contact,
+                Message = message,
+                CreatedAt = createdAt,
+                OccuredAt = occuredAt,
+                Tags = tags
             };
-        }
-
-        public static FollowUp MapToFollowUp(
-            this FollowUpDTO dto)
-        {
-            return FollowUp.Create(
-                dto.Id, 
-                dto.AssistanceId, 
-                dto.Author is null ? 
-                    null 
-                    : dto.Author.MapToAuthor(), 
-                dto.Contact is null ? 
-                    null 
-                    : dto.Contact.MapToContact(), 
-                dto.Message, 
-                dto.CreatedAt, 
-                dto.OccuredAt, 
-                dto.Tags?
-                    .Select(_ => _!.MapToTag())
-                    .ToList()
-            );
+            
+            return newFollowup;
         }
     }
     
@@ -148,11 +59,11 @@ namespace FollowUp.API.Features.FollowUps
                 .UseIdentityColumn(1, 1)
                 .HasColumnName("Id")
                 .HasColumnType("int");
-
-            builder.Property(followup => followup.AssistanceId)
+            
+            builder.Property(followup => followup.IdentifierKey)
                 .IsRequired()
-                .HasColumnName("AssistanceId")
-                .HasColumnType("int");
+                .HasColumnName("IdentifierKey")
+                .HasColumnType("nvarchar(450)");
 
             builder.OwnsOne(followup => followup.Author)
                 .Property(author => author.Id)

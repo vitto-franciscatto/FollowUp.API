@@ -22,31 +22,46 @@ namespace FollowUp.API.Features.FollowUps
             _logger = logger;
         }
 
-        [HttpGet("[controller]/[action]/{assistanceId}")]
-        public async Task<IActionResult> GetByAssistance(
-            int assistanceId, 
+        [HttpGet("[controller]/[action]/{*identifierKey}")]
+        public async Task<IActionResult> GetByIdentifier(
+            string identifierKey, 
             CancellationToken cancellationToken)
         {
             try
             {
-                Result<IEnumerable<FollowUpDTO>> response = await _mediator.Send(
+                Result<IEnumerable<FollowUp>> response = await _mediator.Send(
                     new GetFollowUpsByAssistanceQuery() 
                     { 
-                        AssistanceId = assistanceId 
+                        IdentifierKey = identifierKey 
                     }, 
                     cancellationToken);
 
                 return response.Match<IActionResult>(
-                    dto =>
+                    retrievedFollowups =>
                     {
-                        if (!dto.Any())
+                        if (!retrievedFollowups.Any())
                         {
                             return StatusCode((int)HttpStatusCode.NoContent);
                         }
 
                         return StatusCode(
                             (int)HttpStatusCode.Created, 
-                            dto);
+                            retrievedFollowups.Select(followup => new
+                            {
+                                Id = followup.Id, 
+                                IdentifierKey = followup.IdentifierKey, 
+                                Author = followup.Author?.MapToAuthor(), 
+                                Contact = followup.Contact?.MapToContact(), 
+                                Message = followup.Message, 
+                                CreatedAt = followup.CreatedAt, 
+                                OccuredAt = followup.OccuredAt,
+                                Tags = followup.Tags?
+                                    .Select(tag => new
+                                    {
+                                        Id = tag.Id, 
+                                        Name = tag.Name
+                                    })
+                            }));
                     },
 
                     error => StatusCode(
@@ -57,8 +72,8 @@ namespace FollowUp.API.Features.FollowUps
             {
                 _logger.Error(
                     error, 
-                    "Failed to get followups for assistance {@AssistanceId}", 
-                    assistanceId);
+                    "Failed to get followups for identifier {@IdentifierKey}", 
+                    identifierKey);
                 
                 return StatusCode((int)HttpStatusCode.InternalServerError);
             }
@@ -71,15 +86,30 @@ namespace FollowUp.API.Features.FollowUps
         {
             try
             {
-                Result<FollowUpDTO> response = await _mediator.Send
+                Result<FollowUp> response = await _mediator.Send
                 
                 (request.MapToCommand(DateTime.Now), 
                     cancellationToken);
 
                 return response.Match<IActionResult>(
-                    dto => StatusCode(
+                    followup => StatusCode(
                         (int)HttpStatusCode.Created, 
-                        dto), 
+                        new
+                        {
+                            Id = followup.Id, 
+                            IdentifierKey = followup.IdentifierKey, 
+                            Author = followup.Author?.MapToAuthor(), 
+                            Contact = followup.Contact?.MapToContact(), 
+                            Message = followup.Message, 
+                            CreatedAt = followup.CreatedAt, 
+                            OccuredAt = followup.OccuredAt,
+                            Tags = followup.Tags?
+                                .Select(tag => new
+                                {
+                                    Id = tag.Id, 
+                                    Name = tag.Name
+                                })
+                        }), 
                     error => StatusCode(
                         (int)HttpStatusCode.UnprocessableEntity, 
                         error.Message));
@@ -88,8 +118,8 @@ namespace FollowUp.API.Features.FollowUps
             {
                 _logger.Error(
                     error, 
-                    "Failed to create followup for assistance {@AssistanceId} by {@UserId}", 
-                    request.AssistanceId.ToString(), 
+                    "Failed to create followup for identifier {@IdentifierKey} by {@UserId}", 
+                    request.IdentifierKey, 
                     request.Author?.Id);
                 
                 return StatusCode((int)HttpStatusCode.InternalServerError);

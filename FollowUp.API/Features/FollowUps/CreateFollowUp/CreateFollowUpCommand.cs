@@ -5,9 +5,9 @@ using MediatR;
 
 namespace FollowUp.API.Features.FollowUps.CreateFollowUp
 {
-    public class CreateFollowUpCommand : IRequest<Result<FollowUpDTO>>
+    public class CreateFollowUpCommand : IRequest<Result<FollowUp>>
     {
-        public int AssistanceId { get; set; } = 0;
+        public string IdentifierKey { get; set; } = string.Empty;
         public AuthorDTO? Author { get; set; }
         public ContactDTO? Contact { get; set; }
         public string Message { get; set; } = string.Empty;
@@ -24,26 +24,26 @@ namespace FollowUp.API.Features.FollowUps.CreateFollowUp
         {
             _tagRepository = tagRepository;
 
-            RuleFor(_ => _.AssistanceId)
+            RuleFor(cmd => cmd.IdentifierKey)
                 .Cascade(CascadeMode.Stop)
-                .GreaterThan(0)
-                .WithMessage("O AssistanceId: {PropertyValue} é inválido");
+                .NotNull().WithMessage("O Identificador não pode ser nulo")
+                .NotEmpty().WithMessage("O Identificador não pode ser vazio");
 
             When(command => command.Author is not null, () =>
             {
-                RuleFor(_ => _.Author!)
+                RuleFor(cmd => cmd.Author!)
                     .Cascade(CascadeMode.Stop)
                     .SetValidator(new AuthorDTOValidator());
             });
 
             When(command => command.Contact is not null, () =>
             {
-                RuleFor(_ => _.Contact!)
+                RuleFor(cmd => cmd.Contact!)
                     .Cascade(CascadeMode.Stop)
                     .SetValidator(new ContactDTOValidator());
             });
 
-            RuleFor(_ => _.Message)
+            RuleFor(cmd => cmd.Message)
                 .Cascade(CascadeMode.Stop)
                 .NotNull().WithMessage("A Mensagem não pode ser nula")
                 .NotEmpty().WithMessage("A mensagem não pode ser vazia")
@@ -52,14 +52,14 @@ namespace FollowUp.API.Features.FollowUps.CreateFollowUp
                 .Must(message => message.Length <= 8000)
                     .WithMessage("A mensagem deve ter no máximo 8000 caracteres");
 
-            //RuleFor(_ => _.CreatedAt)
+            //RuleFor(cmd => cmd.CreatedAt)
             //    .Cascade(CascadeMode.Stop);
 
-            //RuleFor(_ => _.OccuredAt)
+            //RuleFor(cmd => cmd.OccuredAt)
             //    .Cascade(CascadeMode.Stop);
 
 
-            RuleForEach(_ => _.TagIds)
+            RuleForEach(cmd => cmd.TagIds)
                 .Cascade(CascadeMode.Stop)
                 .GreaterThan(0).WithMessage("O TagId: {PropertyValue} é inválido")
                 .MustAsync(async (tagId, cancellationToken) => 
@@ -69,26 +69,6 @@ namespace FollowUp.API.Features.FollowUps.CreateFollowUp
                         return tag is not null;
                     })
                 .WithMessage("O TagId: {PropertyValue} não está cadastrado");
-        }
-    }
-    
-    public static class CreateFollowUpCommandMapper
-    {
-        public static FollowUp MapToFollowUp(
-            this CreateFollowUpCommand command)
-        {
-            return FollowUp.Create(
-                0,
-                command.AssistanceId, 
-                command.Author.MapToAuthor(), 
-                command.Contact.MapToContact(), 
-                command.Message, 
-                command.CreatedAt, 
-                command.OccuredAt, 
-                command.TagIds?
-                    .Select(id => Tag.Create(id, string.Empty))
-                    .ToList()
-            );
         }
     }
 }

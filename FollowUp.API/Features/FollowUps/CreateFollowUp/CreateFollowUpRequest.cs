@@ -3,10 +3,9 @@
 namespace FollowUp.API.Features.FollowUps.CreateFollowUp
 {
     public class CreateFollowUpRequest
-    {
-
-        [JsonProperty("assistanceId")]
-        public int AssistanceId { get; set; } = 0;
+    {   
+        [JsonProperty("identifierKey")]
+        public string IdentifierKey { get; set; } = string.Empty;
 
         [JsonProperty("author")]
         public AuthorDTO? Author { get; set; }
@@ -32,7 +31,7 @@ namespace FollowUp.API.Features.FollowUps.CreateFollowUp
         {
             return new CreateFollowUpCommand()
             {
-                AssistanceId = request.AssistanceId, 
+                IdentifierKey = request.IdentifierKey, 
                 Author = request.Author, 
                 Contact = request.Contact, 
                 Message = request.Message, 

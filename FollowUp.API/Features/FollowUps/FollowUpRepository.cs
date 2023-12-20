@@ -6,7 +6,7 @@ namespace FollowUp.API.Features.FollowUps
 {
     public interface IFollowUpRepository
     {
-        Task<IEnumerable<FollowUp>?> GetByAssistance(int assistanceId);
+        Task<IEnumerable<FollowUp>?> GetByAssistance(string identifierKey);
         Task<bool> AddAsync(FollowUp entity);
     }
     
@@ -36,8 +36,8 @@ namespace FollowUp.API.Features.FollowUps
             {
                 _logger.Error(
                     error, 
-                    "Failed to persist new followup from assistance {@AssistanceId} from {@UserId}", 
-                    entity.AssistanceId, 
+                    "Failed to persist new followup for identifier {@IdentifierKey} from {@UserId}", 
+                    entity.IdentifierKey, 
                     entity.Author?.Id);
                 
                 return false;
@@ -45,13 +45,13 @@ namespace FollowUp.API.Features.FollowUps
         }
 
         public async Task<IEnumerable<FollowUp>?> GetByAssistance(
-            int assistanceId)
+            string identifierKey)
         {
             try
             {
                 List<FollowUp>? retrievedFollowUps = await _ctx
                     .Set<FollowUp>()
-                    .Where(followup => followup.AssistanceId == assistanceId)
+                    .Where(followup => followup.IdentifierKey == identifierKey)
                     .Include(followup => followup.Tags)
                     .ToListAsync();
 
@@ -61,8 +61,8 @@ namespace FollowUp.API.Features.FollowUps
             {
                 _logger.Error(
                     error, 
-                    "Failed to query followups for assistance {@AssistanceId}", 
-                    assistanceId);
+                    "Failed to query followups for identifier {@IdentifierKey}", 
+                    identifierKey);
                 
                 return null;
             }
