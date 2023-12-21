@@ -58,7 +58,12 @@ namespace FollowUp.API.Features.FollowUps.CreateFollowUp
                     0,
                     command.IdentifierKey,
                     command.Author.MapToAuthor(),
-                    command.Contact.MapToContact(),
+                    command.Contact is null 
+                    ? null 
+                    : Contact.Create(
+                        command.Contact.Name, 
+                        command.Contact.PhoneNumber, 
+                        command.Contact.Job),
                     command.Message,
                     command.CreatedAt,
                     command.OccuredAt,

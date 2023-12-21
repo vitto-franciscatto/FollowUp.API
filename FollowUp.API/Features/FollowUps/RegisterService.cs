@@ -15,8 +15,8 @@ namespace FollowUp.API.Features.FollowUps
                 AuthorDTOValidator>();
             
             services.AddScoped<
-                IValidator<ContactDTO>, 
-                ContactDTOValidator>();
+                IValidator<Contact>, 
+                ContactValidator>();
             
             services.AddScoped<
                 IValidator<CreateFollowUpCommand>, 

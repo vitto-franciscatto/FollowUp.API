@@ -11,7 +11,7 @@ namespace FollowUp.API.Features.FollowUps.CreateFollowUp
         public AuthorDTO? Author { get; set; }
 
         [JsonProperty("contact")]
-        public ContactDTO? Contact { get; set; }
+        public Contact? Contact { get; set; }
 
         [JsonProperty("message")]
         public string Message { get; set; } = string.Empty;

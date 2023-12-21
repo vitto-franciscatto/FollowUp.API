@@ -9,18 +9,13 @@ namespace FollowUp.API.Features.FollowUps
         {
         }
 
-        private Contact(
-            string name, 
-            string phoneNumber, 
-            string job)
-        {
-            Name = name;
-            PhoneNumber = phoneNumber;
-            Job = job;
-        }
-
+        [JsonProperty("name")]
         public string Name { get; private set; }
+
+        [JsonProperty("phoneNumber")]
         public string PhoneNumber { get; private set; }
+
+        [JsonProperty("job")]
         public string Job { get; private set; }
 
         public static Contact Create(
@@ -28,28 +23,20 @@ namespace FollowUp.API.Features.FollowUps
             string phoneNumber,
             string job)
         {
-            return new Contact(
-                name, 
-                phoneNumber, 
-                job);
+            var contact = new Contact
+            {
+                Name = name, 
+                PhoneNumber = phoneNumber, 
+                Job = job
+            };
+
+            return contact;
         }
     }
     
-    public class ContactDTO
+    public class ContactValidator : AbstractValidator<Contact>
     {
-        [JsonProperty("name")]
-        public string Name { get; set; } = string.Empty;
-
-        [JsonProperty("phoneNumber")]
-        public string PhoneNumber { get; set; } = string.Empty;
-
-        [JsonProperty("job")]
-        public string Job { get; set; } = string.Empty;
-    }
-    
-    public class ContactDTOValidator : AbstractValidator<ContactDTO>
-    {
-        public ContactDTOValidator()
+        public ContactValidator()
         {
             When(contact => !string.IsNullOrEmpty(contact.Name), () => 
             {
@@ -80,39 +67,6 @@ namespace FollowUp.API.Features.FollowUps
                     .Must(job => job.Length <= 255)
                     .WithMessage("O Cargo do contato deve ter no máximo 255 caracteres");
             });
-        }
-    }
-    
-    public static class ContactMapper
-    {
-        public static Contact? MapToContact (
-            this ContactDTO? dto)
-        {
-            if (dto is null)
-            {
-                return null;
-            }
-
-            return Contact.Create(
-                dto.Name, 
-                dto.PhoneNumber, 
-                dto.Job);
-        }
-
-        public static ContactDTO? MapToContact(
-            this Contact? entity)
-        {
-            if (entity is null)
-            {
-                return null;
-            }
-
-            return new ContactDTO() 
-            { 
-                Name = entity.Name, 
-                PhoneNumber = entity.PhoneNumber, 
-                Job = entity.Job 
-            };
         }
     }
 }

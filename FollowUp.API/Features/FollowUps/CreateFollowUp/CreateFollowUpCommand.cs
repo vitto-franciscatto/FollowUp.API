@@ -9,7 +9,7 @@ namespace FollowUp.API.Features.FollowUps.CreateFollowUp
     {
         public string IdentifierKey { get; set; } = string.Empty;
         public AuthorDTO? Author { get; set; }
-        public ContactDTO? Contact { get; set; }
+        public Contact? Contact { get; set; }
         public string Message { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.MinValue;
         public DateTime OccuredAt { get; set; } = DateTime.MinValue;
@@ -40,7 +40,7 @@ namespace FollowUp.API.Features.FollowUps.CreateFollowUp
             {
                 RuleFor(cmd => cmd.Contact!)
                     .Cascade(CascadeMode.Stop)
-                    .SetValidator(new ContactDTOValidator());
+                    .SetValidator(new ContactValidator());
             });
 
             RuleFor(cmd => cmd.Message)
