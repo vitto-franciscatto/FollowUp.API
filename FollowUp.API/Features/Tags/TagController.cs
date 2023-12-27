@@ -41,7 +41,11 @@ namespace FollowUp.API.Features.Tags
 
                         return StatusCode(
                             (int)HttpStatusCode.OK, 
-                            tags);
+                            tags?.Select(tag => new
+                            {
+                                Id = tag.Id,
+                                Name = tag.Name
+                            }));
                     },
                     error => StatusCode(
                         (int)HttpStatusCode.UnprocessableEntity, 
