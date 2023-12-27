@@ -17,8 +17,11 @@ namespace FollowUp.API.Features.FollowUps
             Extension = extension;
         }
 
+        [JsonProperty("id")]
         public int Id { get; private set; }
-        public string Extension { get; private set; }
+
+        [JsonProperty("extension")]
+        public string Extension { get; private set; } = string.Empty;
 
         public static Author Create(
             int id, 
@@ -30,18 +33,9 @@ namespace FollowUp.API.Features.FollowUps
         }
     }
     
-    public class AuthorDTO
+    public class AuthorValidator : AbstractValidator<Author>
     {
-        [JsonProperty("id")]
-        public int Id { get; set; } = 0;
-
-        [JsonProperty("extension")]
-        public string Extension { get; set; } = string.Empty;
-    }
-    
-    public class AuthorDTOValidator : AbstractValidator<AuthorDTO>
-    {
-        public AuthorDTOValidator()
+        public AuthorValidator()
         {
             RuleFor(author => author.Id)
                 .Cascade(CascadeMode.Stop)
@@ -57,37 +51,6 @@ namespace FollowUp.API.Features.FollowUps
                     .Must(ext => ext.Length <= 50)
                     .WithMessage("O Ramal do autor deve ter no máximo 50 caracteres");
             });
-        }
-    }
-    
-    public static class AuthorMapper
-    {
-        public static Author? MapToAuthor(
-            this AuthorDTO? dto)
-        {
-            if(dto is null)
-            {
-                return null;
-            }
-
-            return Author.Create(
-                dto.Id, 
-                dto.Extension);
-        }
-
-        public static AuthorDTO? MapToAuthor(
-            this Author? entity)
-        {
-            if (entity is null)
-            {
-                return null;
-            }
-
-            return new AuthorDTO() 
-            { 
-                Id = entity.Id, 
-                Extension = entity.Extension 
-            };
         }
     }
 }

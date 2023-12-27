@@ -8,7 +8,7 @@ namespace FollowUp.API.Features.FollowUps.CreateFollowUp
     public class CreateFollowUpCommand : IRequest<Result<FollowUp>>
     {
         public string IdentifierKey { get; set; } = string.Empty;
-        public AuthorDTO? Author { get; set; }
+        public Author? Author { get; set; }
         public Contact? Contact { get; set; }
         public string Message { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.MinValue;
@@ -33,7 +33,7 @@ namespace FollowUp.API.Features.FollowUps.CreateFollowUp
             {
                 RuleFor(cmd => cmd.Author!)
                     .Cascade(CascadeMode.Stop)
-                    .SetValidator(new AuthorDTOValidator());
+                    .SetValidator(new AuthorValidator());
             });
 
             When(command => command.Contact is not null, () =>

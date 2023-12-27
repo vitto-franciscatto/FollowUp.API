@@ -57,7 +57,9 @@ namespace FollowUp.API.Features.FollowUps.CreateFollowUp
                 var registeredFollowup = FollowUp.Create(
                     0,
                     command.IdentifierKey,
-                    command.Author.MapToAuthor(),
+                    command.Author is null 
+                    ? null 
+                    : Author.Create(command.Author.Id, command.Author.Extension),
                     command.Contact is null 
                     ? null 
                     : Contact.Create(

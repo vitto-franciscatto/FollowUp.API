@@ -8,7 +8,7 @@ namespace FollowUp.API.Features.FollowUps.CreateFollowUp
         public string IdentifierKey { get; set; } = string.Empty;
 
         [JsonProperty("author")]
-        public AuthorDTO? Author { get; set; }
+        public Author? Author { get; set; }
 
         [JsonProperty("contact")]
         public Contact? Contact { get; set; }

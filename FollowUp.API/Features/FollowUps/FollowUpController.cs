@@ -51,13 +51,8 @@ namespace FollowUp.API.Features.FollowUps
                             {
                                 Id = followup.Id, 
                                 IdentifierKey = followup.IdentifierKey, 
-                                Author = followup.Author?.MapToAuthor(), 
-                                Contact = followup.Contact is null 
-                                    ? null
-                                    : Contact.Create(
-                                        followup.Contact.Name,
-                                        followup.Contact.PhoneNumber,
-                                        followup.Contact.Job), 
+                                Author = followup.Author, 
+                                Contact = followup.Contact, 
                                 Message = followup.Message, 
                                 CreatedAt = followup.CreatedAt, 
                                 OccuredAt = followup.OccuredAt,
@@ -104,13 +99,8 @@ namespace FollowUp.API.Features.FollowUps
                         {
                             Id = followup.Id, 
                             IdentifierKey = followup.IdentifierKey, 
-                            Author = followup.Author?.MapToAuthor(), 
-                            Contact = followup.Contact is null
-                                    ? null
-                                    : Contact.Create(
-                                        followup.Contact.Name,
-                                        followup.Contact.PhoneNumber,
-                                        followup.Contact.Job), 
+                            Author = followup.Author, 
+                            Contact = followup.Contact, 
                             Message = followup.Message, 
                             CreatedAt = followup.CreatedAt, 
                             OccuredAt = followup.OccuredAt,
