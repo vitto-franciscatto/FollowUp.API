@@ -42,12 +42,11 @@ namespace FollowUp.API.Features.FollowUps
                 .GreaterThan(0)
                 .WithMessage("O Id: {PropertyValue} do autor é inválido");
             
-            When(author => !string.IsNullOrEmpty(author.Extension), () =>
+            When(author => author.Extension != String.Empty, () =>
             {
                 RuleFor(author => author.Extension)
                     .Cascade(CascadeMode.Stop)
-                    .Must(ext => ext.Length >= 1)
-                    .WithMessage("O Ramal do autor deve ter no mínimo 1 caracter")
+                    .NotNull().WithMessage("O Ramal do autor não pode ser nulo")
                     .Must(ext => ext.Length <= 50)
                     .WithMessage("O Ramal do autor deve ter no máximo 50 caracteres");
             });
