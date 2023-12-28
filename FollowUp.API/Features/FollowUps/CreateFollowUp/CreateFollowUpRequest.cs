@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using FluentValidation;
+using FollowUp.API.Features.Tags;
+using Newtonsoft.Json;
 
 namespace FollowUp.API.Features.FollowUps.CreateFollowUp
 {
@@ -21,6 +23,58 @@ namespace FollowUp.API.Features.FollowUps.CreateFollowUp
 
         [JsonProperty("tags")]
         public IEnumerable<int>? Tags { get; set; }
+    }
+    
+    public class CreateFollowUpRequestValidator 
+        : AbstractValidator<CreateFollowUpRequest>
+    {
+        private readonly ITagRepository _tagRepository;
+        public CreateFollowUpRequestValidator(ITagRepository tagRepository)
+        {
+            _tagRepository = tagRepository;
+
+            RuleFor(request => request.IdentifierKey)
+                .Cascade(CascadeMode.Stop)
+                .NotNull().WithMessage("O Identificador não pode ser nulo")
+                .NotEmpty().WithMessage("O Identificador não pode ser vazio");
+
+            When(command => command.Author is not null, () =>
+            {
+                RuleFor(request => request.Author!)
+                    .SetValidator(new AuthorValidator());
+            });
+
+            When(command => command.Contact is not null, () =>
+            {
+                RuleFor(request => request.Contact!)
+                    .SetValidator(new ContactValidator());
+            });
+
+            RuleFor(request => request.Message)
+                .Cascade(CascadeMode.Stop)
+                .NotNull().WithMessage("A mensagem não pode ser nula")
+                .NotEmpty().WithMessage("A mensagem não pode ser vazia")
+                .Must(message => message.Length <= 8000)
+                    .WithMessage("A mensagem deve ter no máximo 8000 caracteres");
+
+            //RuleFor(request => request.CreatedAt)
+            //    .Cascade(CascadeMode.Stop);
+
+            //RuleFor(request => request.OccuredAt)
+            //    .Cascade(CascadeMode.Stop);
+
+
+            RuleForEach(request => request.Tags)
+                .Cascade(CascadeMode.Stop)
+                .GreaterThan(0).WithMessage("O TagId: {PropertyValue} é inválido")
+                .MustAsync(async (tagId, cancellationToken) => 
+                    {
+                        Tag? tag = await _tagRepository.Get(tagId);
+
+                        return tag is not null;
+                    })
+                .WithMessage("O TagId: {PropertyValue} não está cadastrado");
+        }
     }
     
     public static class CreateFollowUpRequestMapper

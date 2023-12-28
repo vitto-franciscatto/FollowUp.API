@@ -19,6 +19,10 @@ namespace FollowUp.API.Features.FollowUps
                 ContactValidator>();
             
             services.AddScoped<
+                IValidator<CreateFollowUpRequest>, 
+                CreateFollowUpRequestValidator>();
+            
+            services.AddScoped<
                 IValidator<CreateFollowUpCommand>, 
                 CreateFollowUpCommandValidator>();
 
