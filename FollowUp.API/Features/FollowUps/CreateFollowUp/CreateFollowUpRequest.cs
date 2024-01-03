@@ -10,10 +10,10 @@ namespace FollowUp.API.Features.FollowUps.CreateFollowUp
         public string IdentifierKey { get; set; } = string.Empty;
 
         [JsonProperty("author")]
-        public Author? Author { get; set; }
+        public AuthorDTO? Author { get; set; }
 
         [JsonProperty("contact")]
-        public Contact? Contact { get; set; }
+        public ContactDTO? Contact { get; set; }
 
         [JsonProperty("message")]
         public string Message { get; set; } = string.Empty;
@@ -38,17 +38,17 @@ namespace FollowUp.API.Features.FollowUps.CreateFollowUp
                 .NotNull().WithMessage("O Identificador não pode ser nulo")
                 .NotEmpty().WithMessage("O Identificador não pode ser vazio");
 
-            When(command => command.Author is not null, () =>
-            {
-                RuleFor(request => request.Author!)
-                    .SetValidator(new AuthorValidator());
-            });
+            // When(command => command.Author is not null, () =>
+            // {
+            //     RuleFor(request => request.Author!)
+            //         .SetValidator(new AuthorValidator());
+            // });
 
-            When(command => command.Contact is not null, () =>
-            {
-                RuleFor(request => request.Contact!)
-                    .SetValidator(new ContactValidator());
-            });
+            // When(command => command.Contact is not null, () =>
+            // {
+            //     RuleFor(request => request.Contact!)
+            //         .SetValidator(new ContactValidator());
+            // });
 
             RuleFor(request => request.Message)
                 .Cascade(CascadeMode.Stop)
@@ -85,12 +85,12 @@ namespace FollowUp.API.Features.FollowUps.CreateFollowUp
         {
             return new CreateFollowUpCommand()
             {
-                IdentifierKey = request.IdentifierKey, 
-                Author = request.Author, 
-                Contact = request.Contact, 
-                Message = request.Message, 
-                CreatedAt = dateTime, 
-                OccuredAt = request.DateTime, 
+                IdentifierKey = request.IdentifierKey,
+                Author = (Author)request.Author,
+                Contact = (Contact)request.Contact,
+                Message = request.Message,
+                CreatedAt = dateTime,
+                OccuredAt = request.DateTime,
                 TagIds = request.Tags,
             };
         }

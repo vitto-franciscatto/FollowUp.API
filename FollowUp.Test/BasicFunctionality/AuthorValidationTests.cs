@@ -10,7 +10,11 @@ public class AuthorValidationTests
 
     public static Author ValidAuthor()
     {
-        return Author.Create(22, "12345");
+        Author author = Author.Construct();
+        author.Id = 22;
+        author.Extension = "12345";
+
+        return author;
     }
 
     [Fact]

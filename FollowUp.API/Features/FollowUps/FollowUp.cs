@@ -6,17 +6,64 @@ namespace FollowUp.API.Features.FollowUps
 {
     public class FollowUp
     {
-        //empty constructor to make ef happy
-        public FollowUp(){}
+        private FollowUp(){}
 
-        public int Id { get; private set; }
-        public string IdentifierKey { get; private set; }
-        public Author? Author { get; private set; }
-        public Contact? Contact { get; private set; }
-        public string Message { get; private set; }
-        public DateTime CreatedAt { get; private set; }
-        public DateTime OccuredAt { get; private set; }
-        public List<Tag>? Tags { get; private set; }
+        private int _id;
+        private string _identifierKey = default!;
+        private Author? _author;
+        private Contact? _contact;
+        private string _message = default!;
+        private DateTime _createdAt;
+        private DateTime _occuredAt;
+        private List<Tag>? _tags;
+
+        public static FollowUp Construct()
+        {
+            var followUp = new FollowUp();
+
+            return followUp;
+        }
+
+        public int Id 
+        { 
+            get => _id; 
+            set => _id = value; 
+        }
+        public string IdentifierKey 
+        { 
+            get => _identifierKey; 
+            set => _identifierKey = value; 
+        }
+        public Author? Author 
+        { 
+            get => _author; 
+            set => _author = value; 
+        }
+        public Contact? Contact 
+        { 
+            get => _contact; 
+            set => _contact = value; 
+        }
+        public string Message 
+        { 
+            get => _message; 
+            set => _message = value; 
+        }
+        public DateTime CreatedAt 
+        { 
+            get => _createdAt; 
+            set => _createdAt = value; 
+        }
+        public DateTime OccuredAt 
+        { 
+            get => _occuredAt; 
+            set => _occuredAt = value; 
+        }
+        public List<Tag>? Tags 
+        { 
+            get => _tags; 
+            set => _tags = value; 
+        }
         
         public static FollowUp Create(
             int id, 
@@ -28,24 +75,21 @@ namespace FollowUp.API.Features.FollowUps
             DateTime occuredAt,
             List<Tag>? tags)
         {
-            var newFollowup = new FollowUp
-            {
-                Id = id,
-                IdentifierKey = identifierKey,
-                Author = author,
-                Contact = contact,
-                Message = message,
-                CreatedAt = createdAt,
-                OccuredAt = occuredAt,
-                Tags = tags
-            };
+            var followUp = Construct();
+            followUp.Id = id;
+            followUp.IdentifierKey = identifierKey;
+            followUp.Author = author;
+            followUp.Contact = contact;
+            followUp.Message = message;
+            followUp.CreatedAt = createdAt;
+            followUp.OccuredAt = occuredAt;
+            followUp.Tags = tags;
             
-            return newFollowup;
+            return followUp;
         }
     }
     
-    public class FollowUpMap 
-        : IEntityTypeConfiguration<FollowUp>
+    public class FollowUpMap: IEntityTypeConfiguration<FollowUp>
     {
         public void Configure(
             EntityTypeBuilder<FollowUp> builder)

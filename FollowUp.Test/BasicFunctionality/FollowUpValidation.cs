@@ -1,4 +1,5 @@
 
+using FollowUp.API.Features.FollowUps;
 using FollowUp.API.Features.FollowUps.CreateFollowUp;
 using FollowUp.API.Features.Tags;
 using Moq;
@@ -7,8 +8,8 @@ namespace FollowUp.UnitTesting.BasicFunctionality
 {
     public class FollowUpValidation
     {
-        private static Mock<ITagRepository> _tagRepo = new Mock<ITagRepository>();
-        private CreateFollowUpRequestValidator _createFollowUpRequestValidator = new CreateFollowUpRequestValidator(_tagRepo.Object);
+        private static readonly Mock<ITagRepository> _tagRepo = new Mock<ITagRepository>();
+        private readonly CreateFollowUpRequestValidator _createFollowUpRequestValidator = new CreateFollowUpRequestValidator(_tagRepo.Object);
         
         [Fact]
         public void CreateFollowUpRequest_ShouldBeInvalid_WhenIdentifierKeyIsNull()
@@ -17,8 +18,8 @@ namespace FollowUp.UnitTesting.BasicFunctionality
             CreateFollowUpRequest requestWithNullIdentifierKey = new()
             {
                 IdentifierKey = null,
-                Author = AuthorValidationTests.ValidAuthor(),
-                Contact = ContactValidationTests.ValidContact(),
+                Author = (AuthorDTO)AuthorValidationTests.ValidAuthor(),
+                Contact = (ContactDTO)ContactValidationTests.ValidContact(),
                 Message = "Some message...",
                 DateTime = DateTime.Now,
                 Tags = null
@@ -40,8 +41,8 @@ namespace FollowUp.UnitTesting.BasicFunctionality
             CreateFollowUpRequest requestWithEmptyIdentifierKey = new()
             {
                 IdentifierKey = "",
-                Author = AuthorValidationTests.ValidAuthor(),
-                Contact = ContactValidationTests.ValidContact(),
+                Author = (AuthorDTO)AuthorValidationTests.ValidAuthor(),
+                Contact = (ContactDTO)ContactValidationTests.ValidContact(),
                 Message = "Some message...",
                 DateTime = DateTime.Now,
                 Tags = null
@@ -63,8 +64,8 @@ namespace FollowUp.UnitTesting.BasicFunctionality
             CreateFollowUpRequest request = new()
             {
                 IdentifierKey = "SomeIdentifierKey",
-                Author = AuthorValidationTests.ValidAuthor(),
-                Contact = ContactValidationTests.ValidContact(),
+                Author = (AuthorDTO)AuthorValidationTests.ValidAuthor(),
+                Contact = (ContactDTO)ContactValidationTests.ValidContact(),
                 Message = null,
                 DateTime = DateTime.Now,
                 Tags = null
@@ -86,8 +87,8 @@ namespace FollowUp.UnitTesting.BasicFunctionality
             CreateFollowUpRequest request = new()
             {
                 IdentifierKey = "SomeIdentifierKey",
-                Author = AuthorValidationTests.ValidAuthor(),
-                Contact = ContactValidationTests.ValidContact(),
+                Author = (AuthorDTO)AuthorValidationTests.ValidAuthor(),
+                Contact = (ContactDTO)ContactValidationTests.ValidContact(),
                 Message = string.Empty,
                 DateTime = DateTime.Now,
                 Tags = null
@@ -110,8 +111,8 @@ namespace FollowUp.UnitTesting.BasicFunctionality
             CreateFollowUpRequest request = new()
             {
                 IdentifierKey = "SomeIdentifierKey",
-                Author = AuthorValidationTests.ValidAuthor(),
-                Contact = ContactValidationTests.ValidContact(),
+                Author = (AuthorDTO)AuthorValidationTests.ValidAuthor(),
+                Contact = (ContactDTO)ContactValidationTests.ValidContact(),
                 Message = someBigMessage,
                 DateTime = DateTime.Now,
                 Tags = null
@@ -127,15 +128,15 @@ namespace FollowUp.UnitTesting.BasicFunctionality
         }
         
         [Fact]
-        public async void CreateFollowUpRequest_ShouldBeInvalid_WhenAnyTagHasInvalidId()
+        public async void CreateFollowUpRequest_ShouldBeInvalid_WhenAnyInvalidTagId()
         {
             //Arrange
             int[] tagIds = { 1, 2, 3, 4 }; 
             CreateFollowUpRequest request = new()
             {
                 IdentifierKey = "SomeIdentifierKey",
-                Author = AuthorValidationTests.ValidAuthor(),
-                Contact = ContactValidationTests.ValidContact(),
+                Author = (AuthorDTO)AuthorValidationTests.ValidAuthor(),
+                Contact = (ContactDTO)ContactValidationTests.ValidContact(),
                 Message = "Some message...",
                 DateTime = DateTime.Now,
                 Tags = tagIds

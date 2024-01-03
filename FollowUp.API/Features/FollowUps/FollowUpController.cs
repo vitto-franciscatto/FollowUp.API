@@ -2,10 +2,10 @@
 using FollowUp.API.Features.Authentication;
 using FollowUp.API.Features.FollowUps.CreateFollowUp;
 using FollowUp.API.Features.FollowUps.GetFollowUpsByAssistance;
+using FollowUp.API.Features.Tags;
 using LanguageExt.Common;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using ILogger = Serilog.ILogger;
 
 namespace FollowUp.API.Features.FollowUps
@@ -51,17 +51,13 @@ namespace FollowUp.API.Features.FollowUps
                             {
                                 Id = followup.Id, 
                                 IdentifierKey = followup.IdentifierKey, 
-                                Author = followup.Author, 
-                                Contact = followup.Contact, 
+                                Author = (AuthorDTO)followup.Author, 
+                                Contact = (ContactDTO)followup.Contact, 
                                 Message = followup.Message, 
                                 CreatedAt = followup.CreatedAt, 
                                 OccuredAt = followup.OccuredAt,
                                 Tags = followup.Tags?
-                                    .Select(tag => new
-                                    {
-                                        Id = tag.Id, 
-                                        Name = tag.Name
-                                    })
+                                    .Select(tag => (TagDTO)tag)
                             }));
                     },
 
@@ -99,17 +95,13 @@ namespace FollowUp.API.Features.FollowUps
                         {
                             Id = followup.Id, 
                             IdentifierKey = followup.IdentifierKey, 
-                            Author = followup.Author, 
-                            Contact = followup.Contact, 
+                            Author = (AuthorDTO)followup.Author, 
+                            Contact = (ContactDTO)followup.Contact, 
                             Message = followup.Message, 
                             CreatedAt = followup.CreatedAt, 
                             OccuredAt = followup.OccuredAt,
                             Tags = followup.Tags?
-                                .Select(tag => new
-                                {
-                                    Id = tag.Id, 
-                                    Name = tag.Name
-                                })
+                                .Select(tag => (TagDTO)tag)
                         }), 
                     error => StatusCode(
                         (int)HttpStatusCode.UnprocessableEntity, 

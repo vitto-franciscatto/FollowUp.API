@@ -5,31 +5,80 @@ namespace FollowUp.API.Features.FollowUps
 {
     public class Author
     {
-        public Author()
+        private Author(){}
+
+        private int _id { get; set; }
+        private string _extension { get; set; } = default!;
+
+        public int Id
         {
+            get => _id;
+            set => _id = value;
         }
 
-        private Author(
-            int id, 
-            string extension)
+        public string Extension
         {
-            Id = id;
-            Extension = extension;
+            get => _extension; 
+            set => _extension = value;
         }
 
-        [JsonProperty("id")]
-        public int Id { get; private set; }
+        public static Author Construct()
+        {
+            var author = new Author();
+            author._id = 0;
+            author._extension = string.Empty;
 
-        [JsonProperty("extension")]
-        public string Extension { get; private set; } = string.Empty;
+            return author;
+        }
 
         public static Author Create(
             int id, 
-            string extension) 
-        { 
-            return new Author(
-                id, 
-                extension);
+            string extension)
+        {
+            var author = Construct();
+            author._id = id;
+            author._extension = extension;
+            
+            return author;
+        }
+    }
+    
+    public class AuthorDTO
+    {
+        [JsonProperty("id")]
+        public int Id { get; set; }
+
+        [JsonProperty("extension")] 
+        public string Extension { get; set; } = default!;
+
+        public static explicit operator Author(AuthorDTO? authorDto)
+        {
+            if (authorDto is null)
+            {
+                return default!;
+            }
+            
+            var author = Author.Construct();
+            author.Id = authorDto.Id;
+            author.Extension = authorDto.Extension;
+
+            return author;
+        }
+        
+        public static explicit operator AuthorDTO(Author? author)
+        {           
+            if (author is null)
+            {
+                return default!;
+            }
+            
+            var authorDto = new AuthorDTO
+            {
+                Id = author.Id,
+                Extension = author.Extension
+            };
+
+            return authorDto;
         }
     }
     

@@ -6,27 +6,88 @@ namespace FollowUp.API.Features.Tags
 {
     public class Tag
     {
-        private Tag(
-            int id, 
-            string name) 
-        {
-            Id = id;
-            Name = name;
-        }
-        
-        public int Id { get; private set; }
-        public string Name { get; private set; }
+        private Tag(){}
 
-        public List<FollowUps.FollowUp> FollowUps { get; private set; }
+        private int _id;
+        private string _name = default!;
+        private List<FollowUps.FollowUp> _followUps = default!;
+
+        public static Tag Construct()
+        {
+            var tag = new Tag();
+            tag._followUps = new List<FollowUps.FollowUp>();
+
+            return tag;
+        }
+
+        public int Id
+        {
+            get => _id; 
+            set => _id = value;
+        }
+
+        public string Name
+        {
+            get => _name; 
+            set => _name = value;
+        }
+
+        public List<FollowUps.FollowUp> FollowUps
+        {
+            get => _followUps; 
+            set => _followUps = value;
+        }
 
         public static Tag Create(int id, string name)
         {
-            return new Tag(id, name);
+            Tag tag = Construct();
+            tag._id = id;
+            tag._name = name;
+
+            return tag;
         }
     }
     
-    public class TagMap 
-        : IEntityTypeConfiguration<Tag>
+    public class TagDTO
+    {
+        [JsonProperty("id")]
+        public int Id { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; } = string.Empty;
+
+        public static explicit operator Tag(TagDTO? tagDto)
+        {
+            if (tagDto is null)
+            {
+                return default!;
+            }
+            
+            var tag = Tag.Construct();
+            tag.Id = tagDto.Id;
+            tag.Name = tagDto.Name;
+
+            return tag;
+        }
+        
+        public static explicit operator TagDTO(Tag? tag)
+        {
+            if (tag is null)
+            {
+                return default!;
+            }
+            
+            var tagDto = new TagDTO
+            {
+                Id = tag.Id,
+                Name = tag.Name
+            };
+
+            return tagDto;
+        }
+    }
+    
+    public class TagMap: IEntityTypeConfiguration<Tag>
     {
         public void Configure(
             EntityTypeBuilder<Tag> builder)

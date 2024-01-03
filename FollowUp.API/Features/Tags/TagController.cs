@@ -41,11 +41,7 @@ namespace FollowUp.API.Features.Tags
 
                         return StatusCode(
                             (int)HttpStatusCode.OK, 
-                            tags?.Select(tag => new
-                            {
-                                Id = tag.Id,
-                                Name = tag.Name
-                            }));
+                            tags?.Select(tag => (TagDTO)tag));
                     },
                     error => StatusCode(
                         (int)HttpStatusCode.UnprocessableEntity, 
@@ -74,11 +70,7 @@ namespace FollowUp.API.Features.Tags
                 return response.Match(
                     tag => StatusCode(
                         (int)HttpStatusCode.Created, 
-                        new
-                        {
-                            Id = tag.Id, 
-                            Name = tag.Name
-                        }), 
+                        (TagDTO)tag), 
                     error => StatusCode(
                         (int)HttpStatusCode.UnprocessableEntity, 
                         error.Message));
