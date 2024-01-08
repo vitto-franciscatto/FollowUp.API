@@ -5,7 +5,7 @@
 namespace FollowUp.API.Features.DataBases.Migrations
 {
     /// <inheritdoc />
-    public partial class incresecontactandmessagecolumnssize : Migration
+    public partial class increse_contact_and_message_columns_size : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

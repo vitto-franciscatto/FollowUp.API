@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FollowUp.API.Features.DataBases.Migrations
 {
     [DbContext(typeof(FollowUpDbContext))]
-    [Migration("20230717121637_use-single-schema")]
-    partial class usesingleschema
+    [Migration("20230717121637_use_single_schema")]
+    partial class use_single_schema
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

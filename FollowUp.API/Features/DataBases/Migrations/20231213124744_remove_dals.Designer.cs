@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FollowUp.API.Features.DataBases.Migrations
 {
     [DbContext(typeof(FollowUpDbContext))]
-    [Migration("20231213124744_remove-dals")]
-    partial class removedals
+    [Migration("20231213124744_remove_dals")]
+    partial class remove_dals
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

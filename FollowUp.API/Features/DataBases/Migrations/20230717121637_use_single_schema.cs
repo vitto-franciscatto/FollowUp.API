@@ -5,7 +5,7 @@
 namespace FollowUp.API.Features.DataBases.Migrations
 {
     /// <inheritdoc />
-    public partial class usesingleschema : Migration
+    public partial class use_single_schema : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

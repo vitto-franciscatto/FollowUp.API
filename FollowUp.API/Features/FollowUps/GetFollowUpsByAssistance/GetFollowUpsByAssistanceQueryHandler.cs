@@ -35,7 +35,7 @@ namespace FollowUp.API.Features.FollowUps.GetFollowUpsByAssistance
                         $"followUpsAPI_followUps_identifierKey_{request.IdentifierKey}", 
                         async () =>
                         {
-                            IEnumerable<FollowUps.FollowUp>? followUps = 
+                            IEnumerable<FollowUp>? followUps = 
                                 await _repository.GetByAssistance(
                                     request.IdentifierKey);
 

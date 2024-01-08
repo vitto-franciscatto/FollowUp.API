@@ -37,7 +37,7 @@ public class AuthorValidationTests
     public void Author_ShouldBeInvalid_WhenExtensionIsNull()
     {
         //Arrange
-        string? nullExtension = null;
+        string? nullExtension = default!;
         var author = Author.Create(ValidId, nullExtension);
         
         //Act

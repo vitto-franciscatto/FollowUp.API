@@ -5,7 +5,7 @@
 namespace FollowUp.API.Features.DataBases.Migrations
 {
     /// <inheritdoc />
-    public partial class removedals : Migration
+    public partial class remove_dals : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

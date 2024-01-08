@@ -38,8 +38,13 @@ namespace FollowUp.API.Features.Tags.CreateTag
                             validationResult.Errors.First().ErrorMessage));
                 }
 
-                Tag registeredTag = 
+                Tag? registeredTag = 
                     await _tagRepository.CreateAsync(command.MapToTag());
+
+                if (registeredTag is null)
+                {
+                    return new Result<Tag>(new Exception("Failed to persist data to the data base"));
+                }
 
                 await _publisher.Publish(
                     new TagAddedNotification() 

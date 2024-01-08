@@ -100,12 +100,12 @@ namespace FollowUp.API.Features.Caches
 
         public async Task<T?> GetAsync<T>(
             string key, 
-            Func<Task<T>> factory, 
+            Func<Task<T?>> factory, 
             CancellationToken cancellationToken = default) where T : class
         {
             try
             {
-                T? cachedValue = await this.GetAsync<T>(
+                T? cachedValue = await GetAsync<T>(
                     key,
                     cancellationToken);
 
@@ -116,10 +116,13 @@ namespace FollowUp.API.Features.Caches
 
                 cachedValue = await factory();
 
-                await this.SetAsync<T>(
-                    key, 
-                    cachedValue, 
-                    cancellationToken);
+                if (cachedValue is not null)
+                {
+                    await SetAsync<T>(
+                        key, 
+                        cachedValue, 
+                        cancellationToken);
+                }
 
                 return cachedValue;
             }

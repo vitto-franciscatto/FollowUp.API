@@ -17,7 +17,7 @@ namespace FollowUp.UnitTesting.BasicFunctionality
             //Arrange
             CreateFollowUpRequest requestWithNullIdentifierKey = new()
             {
-                IdentifierKey = null,
+                IdentifierKey = default!,
                 Author = (AuthorDTO)AuthorValidationTests.ValidAuthor(),
                 Contact = (ContactDTO)ContactValidationTests.ValidContact(),
                 Message = "Some message...",
@@ -66,7 +66,7 @@ namespace FollowUp.UnitTesting.BasicFunctionality
                 IdentifierKey = "SomeIdentifierKey",
                 Author = (AuthorDTO)AuthorValidationTests.ValidAuthor(),
                 Contact = (ContactDTO)ContactValidationTests.ValidContact(),
-                Message = null,
+                Message = default!,
                 DateTime = DateTime.Now,
                 Tags = null
             };

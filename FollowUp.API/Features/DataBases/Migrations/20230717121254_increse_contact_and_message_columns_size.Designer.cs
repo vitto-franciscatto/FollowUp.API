@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FollowUp.API.Features.DataBases.Migrations
 {
     [DbContext(typeof(FollowUpDbContext))]
-    [Migration("20230717121254_increse-contact-and-message-columns-size")]
-    partial class incresecontactandmessagecolumnssize
+    [Migration("20230717121254_increse_contact_and_message_columns_size")]
+    partial class increse_contact_and_message_columns_size
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
