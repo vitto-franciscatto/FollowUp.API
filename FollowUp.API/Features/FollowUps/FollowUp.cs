@@ -8,15 +8,6 @@ namespace FollowUp.API.Features.FollowUps
     {
         private FollowUp(){}
 
-        private int _id;
-        private string _identifierKey = default!;
-        private Author? _author;
-        private Contact? _contact;
-        private string _message = default!;
-        private DateTime _createdAt;
-        private DateTime _occuredAt;
-        private List<Tag>? _tags;
-
         public static FollowUp Construct()
         {
             var followUp = new FollowUp();
@@ -24,47 +15,22 @@ namespace FollowUp.API.Features.FollowUps
             return followUp;
         }
 
-        public int Id 
-        { 
-            get => _id; 
-            set => _id = value; 
-        }
-        public string IdentifierKey 
-        { 
-            get => _identifierKey; 
-            set => _identifierKey = value; 
-        }
-        public Author? Author 
-        { 
-            get => _author; 
-            set => _author = value; 
-        }
-        public Contact? Contact 
-        { 
-            get => _contact; 
-            set => _contact = value; 
-        }
-        public string Message 
-        { 
-            get => _message; 
-            set => _message = value; 
-        }
-        public DateTime CreatedAt 
-        { 
-            get => _createdAt; 
-            set => _createdAt = value; 
-        }
-        public DateTime OccuredAt 
-        { 
-            get => _occuredAt; 
-            set => _occuredAt = value; 
-        }
-        public List<Tag>? Tags 
-        { 
-            get => _tags; 
-            set => _tags = value; 
-        }
-        
+        public int Id { get; set; }
+
+        public string IdentifierKey { get; set; } = string.Empty;
+
+        public Author? Author { get; set; }
+
+        public Contact? Contact { get; set; }
+
+        public string Message { get; set; } = string.Empty;
+
+        public DateTime CreatedAt { get; set; }
+
+        public DateTime OccuredAt { get; set; }
+
+        public List<Tag>? Tags { get; set; }
+
         public static FollowUp Create(
             int id, 
             string identifierKey,

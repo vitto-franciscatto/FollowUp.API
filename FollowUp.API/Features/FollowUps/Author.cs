@@ -7,26 +7,13 @@ namespace FollowUp.API.Features.FollowUps
     {
         private Author(){}
 
-        private int _id { get; set; }
-        private string _extension { get; set; } = default!;
+        public int Id { get; set; }
 
-        public int Id
-        {
-            get => _id;
-            set => _id = value;
-        }
-
-        public string Extension
-        {
-            get => _extension; 
-            set => _extension = value;
-        }
+        public string Extension { get; set; } = string.Empty;
 
         public static Author Construct()
         {
             var author = new Author();
-            author._id = 0;
-            author._extension = string.Empty;
 
             return author;
         }
@@ -36,8 +23,8 @@ namespace FollowUp.API.Features.FollowUps
             string extension)
         {
             var author = Construct();
-            author._id = id;
-            author._extension = extension;
+            author.Id = id;
+            author.Extension = extension;
             
             return author;
         }

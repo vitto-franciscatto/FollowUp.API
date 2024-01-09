@@ -8,41 +8,24 @@ namespace FollowUp.API.Features.Tags
     {
         private Tag(){}
 
-        private int _id;
-        private string _name = default!;
-        private List<FollowUps.FollowUp> _followUps = default!;
+        public int Id { get; set; }
 
+        public string Name { get; set; } = string.Empty;
+
+        public List<FollowUps.FollowUp> FollowUps { get; set; } = new();
+        
         public static Tag Construct()
         {
-            var tag = new Tag();
-            tag._followUps = new List<FollowUps.FollowUp>();
+            Tag tag = new();
 
             return tag;
-        }
-
-        public int Id
-        {
-            get => _id; 
-            set => _id = value;
-        }
-
-        public string Name
-        {
-            get => _name; 
-            set => _name = value;
-        }
-
-        public List<FollowUps.FollowUp> FollowUps
-        {
-            get => _followUps; 
-            set => _followUps = value;
         }
 
         public static Tag Create(int id, string name)
         {
             Tag tag = Construct();
-            tag._id = id;
-            tag._name = name;
+            tag.Id = id;
+            tag.Name = name;
 
             return tag;
         }

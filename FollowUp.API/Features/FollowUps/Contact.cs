@@ -6,34 +6,18 @@ namespace FollowUp.API.Features.FollowUps
     public class Contact
     {
         private Contact(){}
-        
-        private string _name = default!;
-        private string _phoneNumber = default!;
-        private string _job = default!;
 
+        public string Name { get; set; } = string.Empty;
+
+        public string PhoneNumber { get; set; } = string.Empty;
+
+        public string Job { get; set; } = string.Empty;
+        
         public static Contact Construct()
         {
             var contact = new Contact();
 
             return contact;
-        }
-
-        public string Name
-        {
-            get => _name; 
-            set => _name = value;
-        }
-
-        public string PhoneNumber
-        {
-            get => _phoneNumber; 
-            set => _phoneNumber = value;
-        }
-
-        public string Job
-        {
-            get => _job; 
-            set => _job = value;
         }
 
         public static Contact Create(
@@ -42,9 +26,9 @@ namespace FollowUp.API.Features.FollowUps
             string job)
         {
             var contact = Construct();
-            contact._name = name;
-            contact._phoneNumber = phoneNumber;
-            contact._job = job;
+            contact.Name = name;
+            contact.PhoneNumber = phoneNumber;
+            contact.Job = job;
 
             return contact;
         }
